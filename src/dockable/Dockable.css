@@ -12,14 +12,14 @@
   flex: 1;
 }
 
-.tabs {
-  flex: 1;
-}
-
 .box.horizontal {
   flex-direction: row;
 }
 
 .box.vertical {
   flex-direction: column;
+}
+
+.views-container {
+  flex: 1;
 }

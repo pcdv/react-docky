@@ -1,8 +1,10 @@
 import React from 'react'
 import './App.css'
-import { Box, Dockable, View } from './dockable/Dockable'
+import { Dockable } from './dockable/Dockable'
+import { IBox } from './dockable/Box'
+import { IView } from './dockable/ViewContainer'
 
-const state: Box = {
+const state: IBox = {
   type: 'box',
   orientation: 'vertical',
   first: {
@@ -35,11 +37,12 @@ const state: Box = {
   },
 }
 
-function render(view: View) {
+function render(view: IView) {
   return (
-    <div className="fill" style={{ background: view.id, color: 'white' }}>
-      {view.label}
-    </div>
+    <div
+      className="fill"
+      style={{ background: view.id, color: 'white', opacity: 0.5 }}
+    ></div>
   )
 }
 
