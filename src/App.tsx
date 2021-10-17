@@ -1,41 +1,9 @@
-import React from 'react'
+import React, { useReducer } from 'react'
 import './App.css'
 import { Dockable } from './dockable/Dockable'
-import { IBox } from './dockable/Box'
+import { reducer } from './dockable/reducer'
+import { sample } from './dockable/samples'
 import { IView } from './dockable/ViewContainer'
-
-const state: IBox = {
-  type: 'box',
-  orientation: 'vertical',
-  first: {
-    type: 'box',
-    orientation: 'horizontal',
-    first: {
-      type: 'tabs',
-      tabs: [{ type: 'view', id: 'red', label: 'Red', viewType: 'colored' }],
-    },
-    second: {
-      type: 'box',
-      orientation: 'vertical',
-      first: {
-        type: 'tabs',
-        tabs: [
-          { type: 'view', id: 'green', label: 'Green', viewType: 'colored' },
-        ],
-      },
-      second: {
-        type: 'tabs',
-        tabs: [
-          { type: 'view', id: 'orange', label: 'Orange', viewType: 'colored' },
-        ],
-      },
-    },
-  },
-  second: {
-    type: 'tabs',
-    tabs: [{ type: 'view', id: 'blue', label: 'Blue', viewType: 'colored' }],
-  },
-}
 
 function render(view: IView) {
   return (
@@ -47,9 +15,10 @@ function render(view: IView) {
 }
 
 function App() {
+  const [state, dispatch] = useReducer(reducer, sample)
   return (
     <div className="App">
-      <Dockable state={state} render={render} />
+      <Dockable state={state} render={render} onChange={dispatch} />
     </div>
   )
 }

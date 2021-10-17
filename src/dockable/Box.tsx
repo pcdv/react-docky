@@ -1,20 +1,23 @@
 import SplitPane from 'react-split-pane'
 import { ITabs, ViewRenderer } from './ViewContainer'
 import { renderAny } from "./renderAny"
+import { Action } from './reducer'
 
 export interface IBox {
   type: 'box'
+  id: string,
   orientation: 'vertical' | 'horizontal'
-  first: IBox | ITabs
+  first?: IBox | ITabs
   second?: IBox | ITabs | null
 }
 
 interface BoxProps {
   state: IBox
   render: ViewRenderer
+  onChange: (action: Action) => void 
 }
 
-export const Box = ({ state: box, render }: BoxProps) => {
+export const Box = ({ state: box, render, onChange }: BoxProps) => {
   if (box.first && box.second)
     return (
       <SplitPane
@@ -22,14 +25,14 @@ export const Box = ({ state: box, render }: BoxProps) => {
         className={`box`}
         defaultSize="50%"
       >
-        {renderAny(box.first, render)}
-        {renderAny(box.second, render)}
+        {renderAny(box.first, render, onChange)}
+        {renderAny(box.second, render, onChange)}
       </SplitPane>
     )
   return (
     <div className={`box ${box.orientation}`}>
-      {!!box.first && renderAny(box.first, render)}
-      {!!box.second && renderAny(box.second, render)}
+      {!!box.first && renderAny(box.first, render, onChange)}
+      {!!box.second && renderAny(box.second, render, onChange)}
     </div>
   )
 }
