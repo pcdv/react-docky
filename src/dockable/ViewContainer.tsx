@@ -27,6 +27,7 @@ interface ViewContainerProps {
 export const ViewContainer = ({ tabs, render }: ViewContainerProps) => {
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
     accept: 'VIEW',
+    canDrop: (item, monitor) => !tabs.tabs.find(t => t.id === (item as IView).id),
     drop: () => ({ name: 'Dustbin' }),
     collect: monitor => ({
       isOver: monitor.isOver(),
@@ -36,17 +37,11 @@ export const ViewContainer = ({ tabs, render }: ViewContainerProps) => {
   if (tabs.tabs.length === 0) return null
 
   const isActive = canDrop && isOver
-  let backgroundColor = '#fff'
-  if (isActive) {
-    backgroundColor = 'darkgreen'
-  } else if (canDrop) {
-    backgroundColor = 'darkkhaki'
-  }
 
+  const className = isActive ? "views-container dnd-active" : "views-container"
   return (
-    <div ref={drop} style={{ backgroundColor }} className="views-container">
+    <div ref={drop} className={className}>
       <div>{tabs.tabs[0].label}</div>
-      {isActive ? 'Release to drop' : null}
       <ViewWrapper view={tabs.tabs[0]} render={render} />
     </div>
   )

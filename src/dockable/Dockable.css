@@ -22,4 +22,11 @@
 
 .views-container {
   flex: 1;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.views-container.dnd-active {
+  border: 3px solid #555;
+  opacity: 0.9;
 }
