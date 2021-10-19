@@ -18,7 +18,7 @@ function App() {
   const [state, dispatch] = useReducer(reducer, sample)
   return (
     <div className="App">
-      <Dockable state={state} render={render} onChange={dispatch} />
+      <Dockable box={state} render={render} onChange={dispatch} />
     </div>
   )
 }

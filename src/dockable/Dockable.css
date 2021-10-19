@@ -1,4 +1,5 @@
-.fill, #root {
+.fill,
+#root {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -11,6 +12,84 @@
   display: flex;
   flex: 1;
   height: 100%;
+}
+
+.drop-zones {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  /* margin: 3px; */
+}
+
+.drop-zones.over {
+  /* padding: 3px; */
+  background: grey;
+}
+.drop-zone {
+  position: absolute;
+  z-index: 10;
+}
+
+.drop-zone.over > div {
+  position: absolute;
+  background: grey;
+  opacity: 0.3;
+}
+
+.drop-zone.over.left > div {
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 100px;
+}
+
+.drop-zone.over.right > div {
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 100px;
+}
+
+.drop-zone.over.top > div {
+  right: 0;
+  top: 0;
+  left: 0;
+  height: 100px;
+}
+
+.drop-zone.over.bottom > div {
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 100px;
+}
+
+.drop-zone.left {
+  left: 0;
+  width: 5px;
+  top: 3px;
+  bottom: 3px;
+}
+
+.drop-zone.right {
+  right: 0;
+  width: 5px;
+  top: 3px;
+  bottom: 3px;
+}
+
+.drop-zone.top {
+  left: 3px;
+  height: 5px;
+  top: 0;
+  right: 3px;
+}
+
+.drop-zone.bottom {
+  left: 3px;
+  height: 5px;
+  bottom: 0;
+  right: 3px;
 }
 
 .box.horizontal {

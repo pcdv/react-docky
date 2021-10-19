@@ -9,7 +9,7 @@ export function renderAny(
 ): React.ReactNode {
   switch (item.type) {
     case 'box':
-      return <Box state={item} render={render} onChange={onChange} />
+      return <Box box={item} render={render} onChange={onChange} />
     case 'tabs':
       return <ViewContainer key={item.id} tabs={item} render={render} onChange={onChange} />
     case 'view':

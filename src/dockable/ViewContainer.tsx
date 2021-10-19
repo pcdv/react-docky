@@ -1,5 +1,6 @@
 import { ReactElement } from 'react'
 import { useDrop } from 'react-dnd'
+import { DropZones } from './DropZones'
 import { Action } from './reducer'
 import { ViewWrapper } from './ViewWrapper'
 
@@ -48,19 +49,21 @@ export const ViewContainer = ({
 
   const className = isActive ? 'views-container dnd-active' : 'views-container'
   return (
-    <div ref={drop} className={className}>
-      <div>
-        [{tabs.id}]
-        {tabs.tabs.map(t => (
-          <span key={t.id}>{t.label + ' '}</span>
-        ))}
+    <DropZones box={tabs}>
+      <div ref={drop} className={className}>
+        <div>
+          [{tabs.id}]
+          {tabs.tabs.map(t => (
+            <span key={t.id}>{t.label + ' '}</span>
+          ))}
+        </div>
+        <ViewWrapper
+          key={tabs.tabs[0].id}
+          view={tabs.tabs[0]}
+          render={render}
+          onChange={onChange}
+        />
       </div>
-      <ViewWrapper
-        key={tabs.tabs[0].id}
-        view={tabs.tabs[0]}
-        render={render}
-        onChange={onChange}
-      />
-    </div>
+    </DropZones>
   )
 }

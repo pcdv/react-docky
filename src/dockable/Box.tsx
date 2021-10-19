@@ -1,23 +1,30 @@
 import SplitPane from 'react-split-pane'
 import { ITabs, ViewRenderer } from './ViewContainer'
-import { renderAny } from "./renderAny"
+import { renderAny } from './renderAny'
 import { Action } from './reducer'
+import { DropZones } from './DropZones'
 
 export interface IBox {
   type: 'box'
-  id: string,
+  id: string
   orientation: 'vertical' | 'horizontal'
   first?: IBox | ITabs
   second?: IBox | ITabs | null
 }
 
 interface BoxProps {
-  state: IBox
+  box: IBox
   render: ViewRenderer
-  onChange: (action: Action) => void 
+  onChange: (action: Action) => void
 }
 
-export const Box = ({ state: box, render, onChange }: BoxProps) => {
+export const Box = ({ box, render, onChange }: BoxProps) => (
+  <DropZones box={box}>
+    <Box0 box={box} render={render} onChange={onChange} />
+  </DropZones>
+)
+
+const Box0 = ({ box, render, onChange }: BoxProps) => {
   if (box.first && box.second)
     return (
       <SplitPane

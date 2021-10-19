@@ -17,13 +17,8 @@ export const ViewWrapper: FC<ViewWrapperProps> = ({
   const [{ isDragging }, drag] = useDrag(
     () => ({
       type: 'VIEW',
-      item: () => {
-        console.log('Dragging ' + view.id)
-        return { id: view.id }
-      },
-      collect: monitor => ({
-        isDragging: monitor.isDragging(),
-      }),
+      item: () => ({ id: view.id }),
+      collect: monitor => ({ isDragging: monitor.isDragging() }),
       end: (item, monitor) => {
         if (monitor.didDrop()) {
           const target = monitor.getDropResult() as ITabs
