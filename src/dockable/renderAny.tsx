@@ -11,7 +11,7 @@ export function renderAny(
     case 'box':
       return <Box state={item} render={render} onChange={onChange} />
     case 'tabs':
-      return <ViewContainer tabs={item} render={render} onChange={onChange} />
+      return <ViewContainer key={item.id} tabs={item} render={render} onChange={onChange} />
     case 'view':
       return render(item)
   }
