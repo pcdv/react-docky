@@ -1,7 +1,8 @@
 import { FC, ReactNode } from 'react'
 import { useDrop } from 'react-dnd'
 import { IBox } from './Box'
-import { ITabs } from './ViewContainer'
+import { Action, Direction } from './reducer'
+import { ITabs, IView } from './ViewContainer'
 
 interface DZSProps {
   box: IBox | ITabs
@@ -19,9 +20,24 @@ export const DropZones: FC<DZSProps> = ({ box, children }) => {
   )
 }
 
+/**
+ * Action generated when a view is dropped on a drop zone.
+ */
+function dropAction(
+  containerId: string,
+  direction: Direction,
+  item: IView
+): Action {
+  return {
+    type: 'move',
+    direction,
+    containerId,
+    viewId: item.id,
+  }
+}
 interface DZProps {
   box: IBox | ITabs
-  direction: 'left' | 'right' | 'top' | 'bottom'
+  direction: Direction
 }
 const DropZone: FC<DZProps> = ({ box, direction }) => {
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
@@ -29,21 +45,18 @@ const DropZone: FC<DZProps> = ({ box, direction }) => {
     canDrop: (item, monitor) => {
       return true
     },
-    drop: () => box,
+    drop: item => dropAction(box.id, direction, item as IView),
     collect: monitor => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),
     }),
   }))
   const isActive = canDrop && isOver
-  if (isActive) console.log('yolo')
 
   return (
-    <div
-      ref={drop}
-      className={`drop-zone ${direction} ${isActive ? 'over' : ''}`}
-    >
-      {isActive && <div />}
-    </div>
+    <>
+      <div ref={drop} className={`drop-zone-trigger ${direction} `} />
+      {isActive && <div className={`drop-zone ${direction}`} />}
+    </>
   )
 }

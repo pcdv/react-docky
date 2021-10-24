@@ -28,6 +28,17 @@ interface ViewContainerProps {
   onChange: (action: Action) => void
 }
 
+/**
+ * Action generated when a view is dropped on ViewContainer.
+ */
+function dropAction(containerId: string, item: IView): Action {
+  return {
+    type: 'move-to-tab',
+    containerId,
+    viewId: item.id,
+  }
+}
+
 export const ViewContainer = ({
   tabs,
   render,
@@ -35,9 +46,8 @@ export const ViewContainer = ({
 }: ViewContainerProps) => {
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
     accept: 'VIEW',
-    canDrop: (item, monitor) =>
-      !tabs.tabs.find(t => t.id === (item as IView).id),
-    drop: () => tabs,
+    canDrop: item => !tabs.tabs.find(t => t.id === (item as IView).id),
+    drop: item => dropAction(tabs.id, item as IView),
     collect: monitor => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),
@@ -49,7 +59,7 @@ export const ViewContainer = ({
 
   const className = isActive ? 'views-container dnd-active' : 'views-container'
   return (
-    <DropZones box={tabs}>
+    <DropZones key={tabs.id} box={tabs}>
       <div ref={drop} className={className}>
         <div>
           [{tabs.id}]

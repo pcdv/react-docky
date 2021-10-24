@@ -4,22 +4,51 @@ import { cloneDeep } from 'lodash'
 
 type State = IBox
 
-export type Action = {
-  type: 'move-to-tab'
-  viewId: string
-  containerId: string
-}
+export type Direction = 'left' | 'right' | 'top' | 'bottom'
+
+export type Action =
+  | {
+      type: 'move-to-tab'
+      viewId: string
+      containerId: string
+    }
+  | {
+      type: 'move'
+      direction: Direction
+      viewId: string
+      containerId: string
+    }
 
 export function reducer(state: State, action: Action): State {
+  const s = cloneDeep(state)
   switch (action.type) {
-    case 'move-to-tab':
-      const s = cloneDeep(state)
+    case 'move-to-tab': {
       const view = removeView(s, action)
       const tabs = findContainer(s, action.containerId) as ITabs
       if (tabs && view) tabs.tabs.push(view)
       return s
+    }
+
+    case 'move': {
+      console.log(
+        'drop ' +
+          action.viewId +
+          ' on ' +
+          action.direction +
+          ' of ' +
+          action.containerId
+      )
+      const res = findView(s, action.viewId)
+      if (res) {
+        const [view, tabs, index, path] = res
+        tabs.tabs.splice(index, 1)
+        let parent = path[path.length - 1]
+        //if (parent.type === 'tabs') parent = path[path.length - 2]
+        //insert(parent, )
+      }
+      return s
+    }
   }
-  throw Error('Unexpected action ' + action.type)
 }
 
 function isContainerEmpty(container: IBox | ITabs): boolean {

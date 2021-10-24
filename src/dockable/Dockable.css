@@ -21,75 +21,75 @@
   /* margin: 3px; */
 }
 
-.drop-zones.over {
-  /* padding: 3px; */
-  background: grey;
-}
-.drop-zone {
+.drop-zone-trigger {
   position: absolute;
   z-index: 10;
 }
 
-.drop-zone.over > div {
+.drop-zone {
   position: absolute;
   background: grey;
   opacity: 0.3;
 }
 
-.drop-zone.over.left > div {
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 100px;
-}
-
-.drop-zone.over.right > div {
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 100px;
-}
-
-.drop-zone.over.top > div {
-  right: 0;
-  top: 0;
-  left: 0;
-  height: 100px;
-}
-
-.drop-zone.over.bottom > div {
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: 100px;
-}
-
 .drop-zone.left {
   left: 0;
-  width: 5px;
-  top: 3px;
-  bottom: 3px;
+  top: 0;
+  bottom: 0;
+  width: 40%;
+  max-width: 400px;
 }
 
 .drop-zone.right {
   right: 0;
-  width: 5px;
-  top: 3px;
-  bottom: 3px;
+  top: 0;
+  bottom: 0;
+  width: 40%;
+  max-width: 400px;
 }
 
 .drop-zone.top {
-  left: 3px;
-  height: 5px;
+  right: 0;
   top: 0;
-  right: 3px;
+  left: 0;
+  height: 40%;
+  max-height: 400px;
 }
 
 .drop-zone.bottom {
-  left: 3px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 40%;
+  max-height: 400px;
+}
+
+.drop-zone-trigger.left {
+  left: 0;
+  width: 5px;
+  top: 11px;
+  bottom: 11px;
+}
+
+.drop-zone-trigger.right {
+  right: 0;
+  width: 5px;
+  top: 11px;
+  bottom: 11px;
+}
+
+.drop-zone-trigger.top {
+  left: 11px;
+  height: 5px;
+  top: 0;
+  right: 11px;
+}
+
+.drop-zone-trigger.bottom {
+  left: 11px;
   height: 5px;
   bottom: 0;
-  right: 3px;
+  right: 11px;
 }
 
 .box.horizontal {
@@ -107,6 +107,11 @@
 }
 
 .views-container.dnd-active {
-  border: 3px solid #555;
-  opacity: 0.9;
+  border: 1px solid #555;
+  opacity: 0.7;
+}
+
+.dragging-view {
+  width: 30px;
+  height: 30px;
 }

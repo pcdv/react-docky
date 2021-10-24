@@ -19,7 +19,7 @@ interface BoxProps {
 }
 
 export const Box = ({ box, render, onChange }: BoxProps) => (
-  <DropZones box={box}>
+  <DropZones key={box.id} box={box}>
     <Box0 box={box} render={render} onChange={onChange} />
   </DropZones>
 )
