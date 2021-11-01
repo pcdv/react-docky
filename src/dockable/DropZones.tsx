@@ -1,62 +1,49 @@
-import { FC, ReactNode } from 'react'
+import { FC } from 'react'
 import { useDrop } from 'react-dnd'
-import { IBox } from './Box'
-import { Action, Direction } from './reducer'
-import { ITabs, IView } from './ViewContainer'
-
-interface DZSProps {
-  box: IBox | ITabs
-  children: ReactNode
-}
-export const DropZones: FC<DZSProps> = ({ box, children }) => {
-  return (
-    <>
-      <DropZone box={box} direction="left" />
-      <DropZone box={box} direction="right" />
-      <DropZone box={box} direction="top" />
-      <DropZone box={box} direction="bottom" />
-      {children}
-    </>
-  )
-}
+import { BoxAction, BoxTransformType } from './reducer2'
+import { Direction, IBox, IView } from './types'
 
 /**
  * Action generated when a view is dropped on a drop zone.
  */
 function dropAction(
-  containerId: string,
-  direction: Direction,
-  item: IView
-): Action {
+  boxId: string,
+  view: IView,
+  type: BoxTransformType
+): BoxAction {
   return {
-    type: 'move',
-    direction,
-    containerId,
-    viewId: item.id,
+    type,
+    boxId,
+    view,
   }
 }
 interface DZProps {
-  box: IBox | ITabs
-  direction: Direction
+  box: IBox
+  position: Direction
+  action: BoxTransformType
 }
-const DropZone: FC<DZProps> = ({ box, direction }) => {
-  const [{ canDrop, isOver }, drop] = useDrop(() => ({
+
+export const DropZone: FC<DZProps> = ({ box, position, action }) => {
+  const [{ canDrop, isOver, isVisible }, drop] = useDrop(() => ({
     accept: 'VIEW',
     canDrop: (item, monitor) => {
       return true
     },
-    drop: item => dropAction(box.id, direction, item as IView),
+    drop: item => dropAction(box.id, item as IView, action),
     collect: monitor => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),
+      isVisible: !!monitor.getItem()
     }),
   }))
   const isActive = canDrop && isOver
+  if (!isVisible)
+    return null
 
   return (
     <>
-      <div ref={drop} className={`drop-zone-trigger ${direction} `} />
-      {isActive && <div className={`drop-zone ${direction}`} />}
+      <div ref={drop} className={`dz-trigger ${position} `} title={`${box.id}:${action}`} />
+      {isActive && <div className={`drop-zone ${position}`} />}
     </>
   )
 }

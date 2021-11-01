@@ -1,13 +1,13 @@
-import React, { useReducer } from 'react'
+import { useReducer } from 'react'
 import './App.css'
-import { Dockable } from './dockable/Dockable'
-import { reducer } from './dockable/reducer'
-import { sample } from './dockable/samples'
-import { IView } from './dockable/ViewContainer'
+import { Box } from './dockable/Box'
+import { reducer } from './dockable/reducer2'
+import { sample2 as sample } from './dockable/samples'
+import { IView } from './dockable/types'
 
 function render(view: IView) {
   return (
-    <div
+    <div key={view.id}
       className="fill"
       style={{ background: view.id, color: 'white', opacity: 0.5 }}
     ></div>
@@ -18,7 +18,7 @@ function App() {
   const [state, dispatch] = useReducer(reducer, sample)
   return (
     <div className="App">
-      <Dockable box={state} render={render} onChange={dispatch} />
+      <Box box={state} render={render} onChange={dispatch} />
     </div>
   )
 }

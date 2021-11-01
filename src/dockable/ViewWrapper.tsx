@@ -1,12 +1,11 @@
 import { FC } from 'react'
 import { useDrag } from 'react-dnd'
-import { Action } from './reducer'
-import { IView, ViewRenderer } from './ViewContainer'
-
+import { BoxAction, ViewAction } from './reducer2'
+import { IView, ViewRenderer } from './types'
 interface ViewWrapperProps {
   view: IView
   render: ViewRenderer
-  onChange: (action: Action) => void
+  onChange: (action: BoxAction | ViewAction) => void
 }
 
 export const ViewWrapper: FC<ViewWrapperProps> = ({
@@ -17,24 +16,21 @@ export const ViewWrapper: FC<ViewWrapperProps> = ({
   const [{ isDragging }, drag] = useDrag(
     () => ({
       type: 'VIEW',
-      item: () => ({ id: view.id }),
+      item: () => view,
       collect: monitor => ({ isDragging: monitor.isDragging() }),
       end: (item, monitor) => {
         if (monitor.didDrop()) {
-          onChange(monitor.getDropResult() as Action)
+          onChange({ type: 'kill', viewId: view.id })
+          onChange(monitor.getDropResult() as BoxAction)
         }
       },
     }),
     []
   )
 
-  if (isDragging) {
-    return <div ref={drag} className="dragging-view" />
-  }
-
   // without key=... react-dnd sometimes uses the wrong view when dragging :/
   return (
-    <div key={view.id} ref={drag} className="fill">
+    <div key={view.id} ref={drag} className="">
       {render(view)}
     </div>
   )
