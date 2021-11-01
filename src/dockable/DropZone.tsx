@@ -6,11 +6,7 @@ import { Direction, IBox, IView } from './types'
 /**
  * Action generated when a view is dropped on a drop zone.
  */
-function dropAction(
-  boxId: string,
-  view: IView,
-  type: BoxTransformType
-): BoxAction {
+function dropAction(boxId: string, view: IView, type: BoxTransformType): BoxAction {
   return {
     type,
     boxId,
@@ -33,16 +29,15 @@ export const DropZone: FC<DZProps> = ({ box, position, action }) => {
     collect: monitor => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),
-      isVisible: !!monitor.getItem()
+      isVisible: !!monitor.getItem(),
     }),
   }))
   const isActive = canDrop && isOver
-  if (!isVisible)
-    return null
-
+  if (!isVisible) return null
+  const key = `${box.id}-${action}`
   return (
     <>
-      <div ref={drop} className={`dz-trigger ${position} `} title={`${box.id}:${action}`} />
+      <div ref={drop} key={key} className={`dz-trigger ${position} `} title={key} />
       {isActive && <div className={`drop-zone ${position}`} />}
     </>
   )

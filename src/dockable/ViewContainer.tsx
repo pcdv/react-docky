@@ -1,6 +1,6 @@
-import { DropZone } from './DropZones'
+import { DropZone } from './DropZone'
 import { BoxAction, BoxTransformType, ViewAction } from './reducer2'
-import { Direction, IBox, ITabs, ViewRenderer } from './types'
+import { Direction, IBox, ITabs, Orientation, ViewRenderer } from './types'
 import { ViewWrapper } from './ViewWrapper'
 
 interface ViewContainerProps {
@@ -10,65 +10,49 @@ interface ViewContainerProps {
   onChange: (action: BoxAction | ViewAction) => void
 }
 
-function toTransform(box: IBox, tabsId: string, position: Direction): BoxTransformType {
-  const pos = box.first?.id === tabsId ? '1' : '2'
-  let action = ''
-  if (box.orientation === 'horizontal') {
-    switch (position) {
-      case 'left':
-        action = pos === '1' ? 'a' : 'i'
-        break
-      case 'right':
-        action = pos === '2' ? 'a' : 'i'
-        break
-      case 'top':
-        action = 'x'
-        break
-      case 'bottom':
-        action = 'y'
-        break
-    }
-  } else {
-    switch (position) {
-      case 'left':
-        action = 'x'
-        break
-      case 'right':
-        action = 'y'
-        break
-      case 'top':
-        action = pos === '1' ? 'a' : 'i'
-        break
-      case 'bottom':
-        action = pos === '2' ? 'a' : 'i'
-        break
-    }
-  }
-  return (action + pos) as BoxTransformType
+const directions: Direction[] = ['left', 'right', 'top', 'bottom']
+const horizontal = ['a', 'i', 'x', 'y']
+
+/**
+ * Return the correct transform type according to direction, box orientation and
+ * rank of container in box.
+ *
+ * @param i direction index in array
+ * @param rank 1 or 2
+ * @param orientation box orientation
+ */
+function transform(i: number, rank: 1 | 2, orientation: Orientation): BoxTransformType {
+  const offset = orientation === 'horizontal' ? 0 : 2
+  return (horizontal[(i + offset) % 4] + rank) as BoxTransformType
 }
 
-export const ViewContainer = ({
-  parent,
-  tabs,
-  render,
-  onChange,
-}: ViewContainerProps) => {
+export const ViewContainer = ({ parent, tabs, render, onChange }: ViewContainerProps) => {
   if (tabs.tabs.length === 0) return null
+  const rank = parent.first?.id === tabs.id ? 1 : 2
 
-  const className = 'views-container'
   return (
-    <div className={className} id={`tabs-${tabs.id}`}>
-      <DropZone box={parent} position='left' action={toTransform(parent, tabs.id, 'left')} />
-      <DropZone box={parent} position='right' action={toTransform(parent, tabs.id, 'right')} />
-      <DropZone box={parent} position='top' action={toTransform(parent, tabs.id, 'top')} />
-      <DropZone box={parent} position='bottom' action={toTransform(parent, tabs.id, 'bottom')} />
+    <div className="views-container" id={`tabs-${tabs.id}`}>
+      {directions.map((position, i) => (
+        <DropZone
+          key={i}
+          box={parent}
+          position={position}
+          action={transform(i, rank, parent.orientation)}
+        />
+      ))}
       <div>
         [{parent.id}-{tabs.id}]
         {tabs.tabs.map(t => (
           <span key={t.id}>{t.label + ' '}</span>
         ))}
       </div>
-      <button style={{zIndex: 100000, float: 'right'}} onClick={() => onChange({type: 'kill', viewId: tabs.tabs[0].id, simplify: true})}>Close</button>
+      <button
+        onClick={() =>
+          onChange({ type: 'kill', viewId: tabs.tabs[0].id, simplify: true })
+        }
+      >
+        Close
+      </button>
       <ViewWrapper
         key={tabs.tabs[0].id}
         view={tabs.tabs[0]}

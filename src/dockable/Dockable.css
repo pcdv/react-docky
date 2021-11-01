@@ -1,4 +1,5 @@
-.fill, #root {
+.fill,
+#root {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -19,13 +20,15 @@
   opacity: 0.4;
 }
 
-.dz-trigger.left, .dz-trigger.right {
+.dz-trigger.left,
+.dz-trigger.right {
   width: 10px;
   top: 11px;
   bottom: 11px;
 }
 
-.dz-trigger.top, .dz-trigger.bottom {
+.dz-trigger.top,
+.dz-trigger.bottom {
   left: 11px;
   height: 10px;
   right: 11px;
@@ -83,7 +86,8 @@
   /* max-width: 400px; */
 }
 
-.drop-zone.top, .drop-zone.bottom {
+.drop-zone.top,
+.drop-zone.bottom {
   right: 0;
   left: 0;
   height: 50%;
