@@ -1,7 +1,8 @@
+import { useState } from 'react'
+import { useDrag } from 'react-dnd'
 import { DropZone } from './DropZone'
 import { BoxAction, BoxTransformType, ViewAction } from './reducer2'
 import { Direction, IBox, ITabs, Orientation, ViewRenderer } from './types'
-import { ViewWrapper } from './ViewWrapper'
 
 interface ViewContainerProps {
   parent: IBox
@@ -40,25 +41,58 @@ export const ViewContainer = ({ parent, tabs, render, onChange }: ViewContainerP
           action={transform(i, rank, parent.orientation)}
         />
       ))}
-      <div>
-        [{parent.id}-{tabs.id}]
-        {tabs.tabs.map(t => (
-          <span key={t.id}>{t.label + ' '}</span>
-        ))}
-      </div>
-      <button
-        onClick={() =>
-          onChange({ type: 'kill', viewId: tabs.tabs[0].id, simplify: true })
-        }
-      >
-        Close
-      </button>
-      <ViewWrapper
-        key={tabs.tabs[0].id}
-        view={tabs.tabs[0]}
-        render={render}
-        onChange={onChange}
-      />
+      <Frame tabs={tabs} render={render} onChange={onChange} />
     </div>
+  )
+}
+
+interface FProps {
+  tabs: ITabs
+  render: ViewRenderer
+  onChange: (action: BoxAction | ViewAction) => void
+}
+
+const Frame = ({ tabs, render, onChange }: FProps) => {
+  const [index, setIndex] = useState(0)
+  const view = tabs.tabs[index]
+  const [{ isDragging }, drag] = useDrag(
+    () => ({
+      type: 'VIEW',
+      item: () => view,
+      collect: monitor => ({ isDragging: monitor.isDragging() }),
+      end: (item, monitor) => {
+        if (monitor.didDrop()) {
+          onChange({ type: 'kill', viewId: view.id })
+          onChange(monitor.getDropResult() as BoxAction)
+        }
+      },
+    }),
+    []
+  )
+  return (
+    <>
+      <div className="rd-frame-header" ref={drag}>
+        {view.label || view.id}
+        <button
+          onClick={() =>
+            onChange({ type: 'kill', viewId: tabs.tabs[index].id, simplify: true })
+          }
+        >
+          X
+        </button>
+      </div>
+
+      <div key={view.id} className="view-wrapper">
+        {render(view)}
+      </div>
+
+      {tabs.tabs.length > 1 && (
+        <div className="rd-frame-footer">
+          {tabs.tabs.map(t => (
+            <span key={t.id}>{t.label + ' '}</span>
+          ))}
+        </div>
+      )}
+    </>
   )
 }

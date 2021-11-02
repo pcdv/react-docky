@@ -114,4 +114,41 @@
   flex: 1;
   height: 100%;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.view-wrapper {
+  flex-grow: 1;
+  display: flex;
+}
+
+.view-wrapper > div {
+  flex-grow: 1;
+}
+
+.rd-frame-header {
+  border-radius: 5px;
+  background: #eee;
+  color: #333;
+  font-size: 12px;
+  font-weight: bold;
+  display: flex;
+  height: 18px;
+  padding: 5px 5px 3px 5px;
+}
+
+.rd-frame-header > button {
+  font-size: 11px;
+  font-family: sans-serif;
+  position: absolute;
+  right: 3px;
+  border: none;
+}
+
+.rd-frame-footer {
+  font-size: 12px;
+  display: flex;
+  height: 16px;
+  padding: 2px 5px;
 }
