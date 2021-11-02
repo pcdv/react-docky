@@ -5,7 +5,7 @@ export function genId(prefix: string): string {
   return prefix + counter++
 }
 
-export function wrapView(view: IView): ITabs {
+export function wrap(view: IView): ITabs {
   return {
     type: 'tabs',
     id: genId('tabs'),

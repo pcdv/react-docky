@@ -1,5 +1,5 @@
 import { BoxAction, reducer, simplify, BoxTransformType } from './reducer2'
-import { repr, wrapView } from './util'
+import { repr, wrap } from './util'
 import { IBox, ITabs, IView, Orientation } from './types'
 
 let IDS: Record<string, number> = {}
@@ -21,8 +21,8 @@ function act(type: BoxTransformType, boxId: string = 'b0'): BoxAction {
 const S0: IBox = {
   type: 'box',
   id: 'b0',
-  first: wrapView(genView('U')),
-  second: wrapView(genView('V')),
+  first: wrap(genView('U')),
+  second: wrap(genView('V')),
   orientation: 'horizontal',
 }
 

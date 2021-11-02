@@ -60,7 +60,7 @@
 .drop-zone {
   position: absolute;
   background: grey;
-  opacity: 0.3;
+  opacity: 0.6;
 }
 
 .drop-zone.over {
