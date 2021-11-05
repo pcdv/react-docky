@@ -1,22 +1,19 @@
-import { IBox } from "./types";
+import { IBox } from './types'
 
 export const sample: IBox = {
   id: 'box0',
   type: 'box',
   orientation: 'vertical',
 
-  first:
-  {
+  one: {
     id: 'tabs1',
     type: 'tabs',
     tabs: [{ type: 'view', id: 'red', label: 'Red', viewType: 'colored' }],
   },
-  second: {
+  two: {
     id: 'tabs3',
     type: 'tabs',
-    tabs: [
-      { type: 'view', id: 'orange', label: 'Orange', viewType: 'colored' },
-    ],
+    tabs: [{ type: 'view', id: 'orange', label: 'Orange', viewType: 'colored' }],
   },
 }
 
@@ -25,40 +22,36 @@ export const sample2: IBox = {
   type: 'box',
   orientation: 'vertical',
 
-  first: {
+  one: {
     id: 'box1',
     type: 'box',
     orientation: 'horizontal',
 
-    first: {
+    one: {
       id: 'tabs1',
       type: 'tabs',
       tabs: [{ type: 'view', id: 'red', label: 'Red', viewType: 'colored' }],
     },
 
-    second: {
+    two: {
       type: 'box',
       id: 'box2',
       orientation: 'vertical',
 
-      first: {
+      one: {
         id: 'tabs2',
         type: 'tabs',
-        tabs: [
-          { type: 'view', id: 'green', label: 'Green', viewType: 'colored' },
-        ],
+        tabs: [{ type: 'view', id: 'green', label: 'Green', viewType: 'colored' }],
       },
 
-      second: {
+      two: {
         id: 'tabs3',
         type: 'tabs',
-        tabs: [
-          { type: 'view', id: 'orange', label: 'Orange', viewType: 'colored' },
-        ],
+        tabs: [{ type: 'view', id: 'orange', label: 'Orange', viewType: 'colored' }],
       },
     },
   },
-  second: {
+  two: {
     id: 'tabs4',
     type: 'tabs',
     tabs: [{ type: 'view', id: 'blue', label: 'Blue', viewType: 'colored' }],

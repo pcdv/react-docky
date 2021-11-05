@@ -11,8 +11,8 @@ export interface IBox {
   type: 'box'
   id: string
   orientation: Orientation
-  first?: IBox | ITabs | null
-  second?: IBox | ITabs | null
+  one?: IBox | ITabs | null
+  two?: IBox | ITabs | null
 }
 
 export interface ITabs {
@@ -32,23 +32,3 @@ export interface IView {
 export type State = IBox
 
 export type Direction = 'left' | 'right' | 'top' | 'bottom' | 'over'
-
-export type MoveAction = {
-  type: 'move'
-  direction?: Direction
-  viewId: string
-  containerId: string
-  parentId?: string
-}
-
-export type AddAction = {
-  type: 'add-view'
-  view: IView
-  containerId?: string
-  direction?: Direction
-  parentId?: string
-}
-
-export type Action =
-  | MoveAction
-  | AddAction

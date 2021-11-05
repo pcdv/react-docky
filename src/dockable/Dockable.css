@@ -134,16 +134,24 @@
   font-size: 12px;
   font-weight: bold;
   display: flex;
-  height: 18px;
-  padding: 5px 5px 3px 5px;
+  height: 17px;
+  padding: 5px 5px 2px 7px;
 }
 
+.rd-frame-header > button:hover {
+  background: #f7f7f7;
+}
 .rd-frame-header > button {
-  font-size: 11px;
+  border-radius: 5px;
+  padding: 4px;
+  font-size: 6px;
   font-family: sans-serif;
   position: absolute;
   right: 3px;
   border: none;
+  height: 18px;
+  width: 18px;
+  margin-top: -1.5px;
 }
 
 .rd-frame-footer {

@@ -29,7 +29,7 @@ function transform(i: number, rank: 1 | 2, orientation: Orientation): BoxTransfo
 
 export const ViewContainer = ({ parent, tabs, render, onChange }: ViewContainerProps) => {
   if (tabs.tabs.length === 0) return null
-  const rank = parent.first?.id === tabs.id ? 1 : 2
+  const rank = parent.one?.id === tabs.id ? 1 : 2
 
   return (
     <div className="views-container" id={`tabs-${tabs.id}`}>
@@ -78,7 +78,7 @@ const Frame = ({ tabs, render, onChange }: FProps) => {
             onChange({ type: 'kill', viewId: tabs.tabs[index].id, simplify: true })
           }
         >
-          X
+          {"\u2573"}
         </button>
       </div>
 

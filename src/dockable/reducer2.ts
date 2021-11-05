@@ -27,7 +27,7 @@ h(U, V) ^ x2(W) = h(U, v(W, V))
 h(U, V) ^ y2(W) = h(U, v(V, W))
 
 */
-import { IBox, ITabs, IView, Orientation } from './types'
+import { IBox, ITabs, IView } from './types'
 import { genId, wrap } from './util'
 
 export type BoxTransformType = 'i1' | 'i2' | 'a1' | 'a2' | 'x1' | 'x2' | 'y1' | 'y2' | 'o1' | 'o2'
@@ -48,21 +48,24 @@ export type ViewAction = {
 
 type BoxTransform = (box: IBox, view: IView) => IBox | ITabs | null
 
-const BOX_TRANSFORMS: Record<BoxTransformType, BoxTransform> = {
-  i1: (b, v) => ({ ...b, first: { ...b, id: genId('box'), second: wrap(v) } }),
-  a1: (b, v) => ({ ...b, first: { ...b, id: genId('box'), first: wrap(v), second: b.first } }),
-  a2: (b, v) => ({ ...b, second: { ...b, id: genId('box'), first: wrap(v) } }),
-  i2: (b, v) => ({ ...b, second: { ...b, id: genId('box'), second: wrap(v), first: b.second } }),
-  o1: (b, v) => ({ ...b, second: { ...b, id: genId('box') }, first: wrap(v), orientation: rot(b) }),
-  o2: (b, v) => ({ ...b, first: { ...b, id: genId('box') }, second: wrap(v), orientation: rot(b) }),
-  x1: (b, v) => ({ ...b, first: { ...b, id: genId('box'), orientation: rot(b), first: wrap(v), second: b.first } }),
-  x2: (b, v) => ({ ...b, second: { ...b, id: genId('box'), orientation: rot(b), first: wrap(v) } }),
-  y1: (b, v) => ({ ...b, first: { ...b, id: genId('box'), orientation: rot(b), second: wrap(v) } }),
-  y2: (b, v) => ({ ...b, second: { ...b, id: genId('box'), orientation: rot(b), first: b.second, second: wrap(v) } }),
+const id = () => genId('box')
+
+function rotate(box: IBox): IBox {
+  box.orientation = box.orientation === 'horizontal' ? 'vertical' : 'horizontal'
+  return box
 }
 
-function rot(box: IBox): Orientation {
-  return box.orientation === 'horizontal' ? 'vertical' : 'horizontal'
+const BOX_TRANSFORMS: Record<BoxTransformType, BoxTransform> = {
+  i1: (b, v) => ({ ...b, one: { ...b, id: id(), two: wrap(v) } }),
+  a1: (b, v) => ({ ...b, one: { ...b, id: id(), one: wrap(v), two: b.one } }),
+  a2: (b, v) => ({ ...b, two: { ...b, id: id(), one: wrap(v) } }),
+  i2: (b, v) => ({ ...b, two: { ...b, id: id(), two: wrap(v), one: b.two } }),
+  x1: (b, v) => ({ ...b, one: rotate({ ...b, id: id(), one: wrap(v), two: b.one }) }),
+  y1: (b, v) => ({ ...b, one: rotate({ ...b, id: id(), two: wrap(v) }) }),
+  x2: (b, v) => ({ ...b, two: rotate({ ...b, id: id(), one: wrap(v) }) }),
+  y2: (b, v) => ({ ...b, two: rotate({ ...b, id: id(), one: b.two, two: wrap(v) }) }),
+  o1: (b, v) => rotate({ ...b, two: { ...b, id: id() }, one: wrap(v) }),
+  o2: (b, v) => rotate({ ...b, one: { ...b, id: id() }, two: wrap(v) }),
 }
 
 /**
@@ -73,9 +76,9 @@ export function simplify(s: IBox | ITabs | null | undefined): IBox | ITabs | nul
 
   switch (s.type) {
     case 'box':
-      const first = simplify(s.first)
-      const second = simplify(s.second)
-      return first && second ? { ...s, first, second } : first ? first : second ? second : null
+      const one = simplify(s.one)
+      const two = simplify(s.two)
+      return one && two ? { ...s, one: one, two: two } : one ? one : two ? two : null
 
     case 'tabs':
       const tabs = s.tabs.filter(v => !v.dead)
@@ -94,37 +97,33 @@ export function reducer(s: IBox | ITabs | null | undefined, action: BoxAction | 
 
   if (s?.type === 'box') return s
 
-  return { type: 'box', orientation: 'horizontal', id: 'root', first: s }
+  return { type: 'box', orientation: 'horizontal', id: 'root', one: s }
 }
 
 function reducer0(s: IBox | ITabs | null | undefined, action: BoxAction | ViewAction): IBox | ITabs | null | undefined {
   if (!s) return s
 
-  if (action.type === 'kill') {
-    if (s.type === 'tabs') {
-      const pos = s.tabs.findIndex(v => v.id === action.viewId)
-      if (pos === -1) return s
-      else
-        return {
-          ...s,
-          tabs: [...s.tabs.slice(0, pos), { ...s.tabs[pos], dead: true }, ...s.tabs.slice(pos + 1)],
-        }
-    } else if (s.type === 'box') {
+  if (action.type === 'kill' && s.type === 'tabs') {
+    const pos = s.tabs.findIndex(v => v.id === action.viewId)
+    if (pos === -1) return s
+    else
       return {
         ...s,
-        first: reducer0(s.first, action),
-        second: reducer0(s.second, action),
+        tabs: [...s.tabs.slice(0, pos), { ...s.tabs[pos], dead: true }, ...s.tabs.slice(pos + 1)],
       }
-    }
-  } else {
-    if (s.type === 'box') {
-      if (action.boxId === s.id) return BOX_TRANSFORMS[action.type](s, action.view)
-      return {
-        ...s,
-        first: reducer0(s.first, action),
-        second: reducer0(s.second, action),
-      }
+  }
+
+  if (s.type === 'box' && action.type !== 'kill') {
+    if (action.boxId === s.id) return BOX_TRANSFORMS[action.type](s, action.view)
+  }
+
+  if (s.type === 'box') {
+    return {
+      ...s,
+      one: reducer0(s.one, action),
+      two: reducer0(s.two, action),
     }
   }
+
   return s
 }

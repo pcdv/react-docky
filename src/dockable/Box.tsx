@@ -2,7 +2,7 @@ import SplitPane from 'react-split-pane'
 import { DropZone } from './DropZone'
 import { BoxAction, ViewAction } from './reducer2'
 import { ViewContainer } from './ViewContainer'
-import { IBox, ITabs, IView, ViewRenderer } from './types'
+import { IBox, ITabs, ViewRenderer } from './types'
 import './Dockable.css'
 import '../css/react-splitpane.css'
 
@@ -14,7 +14,7 @@ interface BoxProps {
 
 export const Box = ({ box, render, onChange }: BoxProps) => {
   const horizontal = box.orientation === 'horizontal'
-  if (box.first && box.second)
+  if (box.one && box.two)
     return (
       <div key={box.id} className="fill" id={`box-${box.id}`}>
         <DropZone box={box} action="o1" position={horizontal ? 'top' : 'left'} />
@@ -24,21 +24,21 @@ export const Box = ({ box, render, onChange }: BoxProps) => {
           className="box"
           defaultSize="50%"
         >
-          {renderAny(box.first, render, onChange, box)}
-          {renderAny(box.second, render, onChange, box)}
+          {renderAny(box.one, render, onChange, box)}
+          {renderAny(box.two, render, onChange, box)}
         </SplitPane>
       </div>
     )
   return (
     <div key={box.id} className={`box ${box.orientation}`}>
-      {!!box.first && renderAny(box.first, render, onChange, box)}
-      {!!box.second && renderAny(box.second, render, onChange, box)}
+      {!!box.one && renderAny(box.one, render, onChange, box)}
+      {!!box.two && renderAny(box.two, render, onChange, box)}
     </div>
   )
 }
 
 export function renderAny(
-  item: IBox | ITabs | IView,
+  item: IBox | ITabs ,
   render: ViewRenderer,
   onChange: (action: BoxAction | ViewAction) => void,
   parent: IBox
@@ -56,7 +56,5 @@ export function renderAny(
           parent={parent}
         />
       )
-    case 'view':
-      return render(item)
   }
 }

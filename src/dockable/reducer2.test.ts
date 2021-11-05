@@ -21,8 +21,8 @@ function act(type: BoxTransformType, boxId: string = 'b0'): BoxAction {
 const S0: IBox = {
   type: 'box',
   id: 'b0',
-  first: wrap(genView('U')),
-  second: wrap(genView('V')),
+  one: wrap(genView('U')),
+  two: wrap(genView('V')),
   orientation: 'horizontal',
 }
 
@@ -79,15 +79,15 @@ function tobox(view: string | IBox | ITabs): IBox | ITabs {
 
 function box(
   orientation: Orientation,
-  first: IBox | ITabs | string,
-  second: IBox | ITabs | string
+  one: IBox | ITabs | string,
+  two: IBox | ITabs | string
 ): IBox {
   return {
     type: 'box',
     id: 'bx' + cnt++,
     orientation: orientation,
-    first: tobox(first),
-    second: tobox(second),
+    one: tobox(one),
+    two: tobox(two),
   }
 }
 
@@ -100,8 +100,8 @@ function v(first: IBox | ITabs | string, second: IBox | ITabs | string): IBox {
 
 describe('Buggy scenario?', () => {
   const S1 = v(h(v('green', 'orange'), 'red'), 'blue')
-  const boxId = S1?.first?.id as string
-  const view = (S1.second as ITabs).tabs[0]
+  const boxId = S1?.one?.id as string
+  const view = (S1.two as ITabs).tabs[0]
   expect(view).toHaveProperty('id', 'blue')
 
   const S2 = reducer(S1, { type: 'kill', viewId: 'blue' })

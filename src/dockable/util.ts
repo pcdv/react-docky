@@ -18,7 +18,7 @@ export function repr(x: IBox | ITabs | IView | null | undefined): string {
 
   switch (x.type) {
     case 'box':
-      return `${x.orientation[0]}(${repr(x.first)}, ${repr(x.second)})`
+      return `${x.orientation[0]}(${repr(x.one)}, ${repr(x.two)})`
     case 'tabs':
       return x.tabs.map(v => repr(v)).join('-')
     case 'view':
