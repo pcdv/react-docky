@@ -37,7 +37,7 @@ function App() {
         &nbsp; {repr(box)}
       </div>
       <div id="desktop">
-        <Box key={box.id} box={box} render={render} onChange={onChange} />
+        <Box key={box.id} box={box} render={render} dispatch={onChange} />
       </div>
     </div>
   )

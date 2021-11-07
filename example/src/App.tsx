@@ -8,7 +8,7 @@ function render(view: IView) {
 
 function App() {
   const [state, dispatch] = useReducer(reducer, sample)
-  return <Box box={state} render={render} onChange={dispatch} />
+  return <Box box={state} render={render} dispatch={dispatch} />
 }
 
 export default App

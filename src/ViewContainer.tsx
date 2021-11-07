@@ -10,7 +10,7 @@ interface ViewContainerProps {
   rank: 1 | 2
   tabs: ITabs
   render: ViewRenderer
-  onChange: (action: BoxAction | ViewAction) => void
+  dispatch: (action: BoxAction | ViewAction) => void
 }
 
 const directions: Direction[] = ['left', 'right', 'top', 'bottom']
@@ -31,7 +31,7 @@ function transform(i: number, rank: 1 | 2, orientation: Orientation): BoxTransfo
 
 const INVISIBLE : CSSProperties= {display: 'none'}
 
-export const ViewContainer = ({ parent, rank, tabs, render, onChange }: ViewContainerProps) => {
+export const ViewContainer = ({ parent, rank, tabs, render, dispatch: onChange }: ViewContainerProps) => {
   const [index/*, setIndex*/] = useState(0)
   const view = tabs.tabs[index]
   const [{ isDragging }, drag] = useDrag(
