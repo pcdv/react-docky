@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { CSSProperties, useState } from 'react'
 import { useDrag } from 'react-dnd'
 import { DropZone } from './DropZone'
 import { BoxAction, BoxTransformType, ViewAction } from './reducer2'
@@ -28,6 +28,8 @@ function transform(i: number, rank: 1 | 2, orientation: Orientation): BoxTransfo
   return (horizontal[(i + offset) % 4] + rank) as BoxTransformType
 }
 
+const INVISIBLE : CSSProperties= {display: 'none'}
+
 export const ViewContainer = ({ parent, rank, tabs, render, onChange }: ViewContainerProps) => {
   const [index, setIndex] = useState(0)
   const view = tabs.tabs[index]
@@ -48,7 +50,7 @@ export const ViewContainer = ({ parent, rank, tabs, render, onChange }: ViewCont
   if (tabs.tabs.length === 0) return null
 
   return (
-    <div className="views-container" id={`tabs-${tabs.id}`}>
+    <div className="views-container" id={`tabs-${tabs.id}`} style={isDragging ? INVISIBLE : undefined}>
       <div className="rd-frame-header" ref={drag}>
         {view.label || view.id}
         &nbsp;({tabs.id})
