@@ -1,4 +1,4 @@
-import { IBox } from './types'
+import { IBox } from './dockable/types'
 
 export const sample: IBox = {
   id: 'box0',

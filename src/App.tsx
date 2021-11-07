@@ -1,7 +1,7 @@
 import { useReducer } from 'react'
 import { Box } from './dockable/Box'
 import { reducer } from './dockable/reducer2'
-import { sample2 as sample } from './dockable/samples'
+import { sample2 as sample } from './samples'
 import { IView } from './dockable/types'
 
 function render(view: IView) {
