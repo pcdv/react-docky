@@ -1,6 +1,7 @@
 import { IBox, ITabs, IView } from './types'
 
-let counter = 0
+// hack to avoid ID collision with samples (need a better way)
+let counter = 1000
 export function genId(prefix: string): string {
   return prefix + counter++
 }
