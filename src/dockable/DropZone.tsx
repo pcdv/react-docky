@@ -17,15 +17,19 @@ interface DZProps {
   box: IBox
   position: Direction
   action: BoxTransformType
+  accept?: (view: IView) => boolean
 }
 
-export const DropZone: FC<DZProps> = ({ box, position, action }) => {
+export const DropZone: FC<DZProps> = ({ box, position, action, accept }) => {
   const [{ canDrop, isOver, isVisible }, drop] = useDrop(() => ({
     accept: 'VIEW',
     canDrop: (item, monitor) => {
-      return true
+      return accept ? accept(item as IView) : true
     },
-    drop: item => dropAction(box.id, item as IView, action),
+    drop: item => {
+      console.log('drop on '+box.id)
+      return dropAction(box.id, item as IView, action)
+    },
     collect: monitor => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),

@@ -6,6 +6,7 @@ import { Direction, IBox, ITabs, Orientation, ViewRenderer } from './types'
 
 interface ViewContainerProps {
   parent: IBox
+  rank: 1 | 2
   tabs: ITabs
   render: ViewRenderer
   onChange: (action: BoxAction | ViewAction) => void
@@ -27,32 +28,7 @@ function transform(i: number, rank: 1 | 2, orientation: Orientation): BoxTransfo
   return (horizontal[(i + offset) % 4] + rank) as BoxTransformType
 }
 
-export const ViewContainer = ({ parent, tabs, render, onChange }: ViewContainerProps) => {
-  if (tabs.tabs.length === 0) return null
-  const rank = parent.one?.id === tabs.id ? 1 : 2
-
-  return (
-    <div className="views-container" id={`tabs-${tabs.id}`}>
-      {directions.map((position, i) => (
-        <DropZone
-          key={i}
-          box={parent}
-          position={position}
-          action={transform(i, rank, parent.orientation)}
-        />
-      ))}
-      <Frame tabs={tabs} render={render} onChange={onChange} />
-    </div>
-  )
-}
-
-interface FProps {
-  tabs: ITabs
-  render: ViewRenderer
-  onChange: (action: BoxAction | ViewAction) => void
-}
-
-const Frame = ({ tabs, render, onChange }: FProps) => {
+export const ViewContainer = ({ parent, rank, tabs, render, onChange }: ViewContainerProps) => {
   const [index, setIndex] = useState(0)
   const view = tabs.tabs[index]
   const [{ isDragging }, drag] = useDrag(
@@ -62,27 +38,37 @@ const Frame = ({ tabs, render, onChange }: FProps) => {
       collect: monitor => ({ isDragging: monitor.isDragging() }),
       end: (item, monitor) => {
         if (monitor.didDrop()) {
-          onChange({ type: 'kill', viewId: view.id })
           onChange(monitor.getDropResult() as BoxAction)
         }
       },
     }),
     []
   )
+
+  if (tabs.tabs.length === 0) return null
+
   return (
-    <>
+    <div className="views-container" id={`tabs-${tabs.id}`}>
       <div className="rd-frame-header" ref={drag}>
         {view.label || view.id}
+        &nbsp;({tabs.id})
         <button
-          onClick={() =>
-            onChange({ type: 'kill', viewId: tabs.tabs[index].id, simplify: true })
-          }
+          onClick={() => onChange({ type: 'kill', viewId: tabs.tabs[index].id, simplify: true })}
         >
-          {"\u2573"}
+          {'\u2573'}
         </button>
       </div>
 
       <div key={view.id} className="view-wrapper">
+        {directions.map((position, i) => (
+          <DropZone
+            key={tabs.id + i}
+            box={parent}
+            accept={v => v.id !== view.id}
+            position={position}
+            action={transform(i, rank, parent.orientation)}
+          />
+        ))}
         {render(view)}
       </div>
 
@@ -93,6 +79,6 @@ const Frame = ({ tabs, render, onChange }: FProps) => {
           ))}
         </div>
       )}
-    </>
+    </div>
   )
 }

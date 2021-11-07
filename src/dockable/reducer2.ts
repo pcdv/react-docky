@@ -87,6 +87,7 @@ export function simplify(s: IBox | ITabs | null | undefined): IBox | ITabs | nul
 }
 
 export function reducer(s: IBox | ITabs | null | undefined, action: BoxAction | ViewAction): IBox {
+  if (action.type !== 'kill') s = reducer0(s, { type: 'kill', viewId: action.view.id })
   s = reducer0(s, action)
 
   if (action.type !== 'kill' || action.simplify) {
@@ -100,23 +101,27 @@ export function reducer(s: IBox | ITabs | null | undefined, action: BoxAction | 
   return { type: 'box', orientation: 'horizontal', id: 'root', one: s }
 }
 
-function reducer0(s: IBox | ITabs | null | undefined, action: BoxAction | ViewAction): IBox | ITabs | null | undefined {
-  if (!s) return s
+function reducer0(
+  s: IBox | ITabs | null | undefined,
+  action: BoxAction | ViewAction
+): IBox | ITabs | null | undefined {
+  if (!s) return null
 
   if (action.type === 'kill' && s.type === 'tabs') {
     const pos = s.tabs.findIndex(v => v.id === action.viewId)
-    if (pos === -1) return s
-    else
-      return {
-        ...s,
-        tabs: [...s.tabs.slice(0, pos), { ...s.tabs[pos], dead: true }, ...s.tabs.slice(pos + 1)],
-      }
+    return pos === -1
+      ? s
+      : {
+          ...s,
+          tabs: [...s.tabs.slice(0, pos), { ...s.tabs[pos], dead: true }, ...s.tabs.slice(pos + 1)],
+        }
   }
 
   if (s.type === 'box' && action.type !== 'kill') {
     if (action.boxId === s.id) return BOX_TRANSFORMS[action.type](s, action.view)
   }
 
+  // propagate to children
   if (s.type === 'box') {
     return {
       ...s,
