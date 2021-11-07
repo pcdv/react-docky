@@ -1,10 +1,9 @@
+import React from 'react'
 import SplitPane from 'react-split-pane'
 import { DropZone } from './DropZone'
 import { BoxAction, ViewAction } from './reducer2'
 import { ViewContainer } from './ViewContainer'
 import { IBox, ITabs, ViewRenderer } from './types'
-import './Dockable.css'
-import '../css/react-splitpane.css'
 
 interface BoxProps {
   box: IBox
@@ -33,7 +32,7 @@ export const Box = ({ box, render, onChange }: BoxProps) => {
   )
 }
 
-export function renderAny(
+function renderAny(
   rank: 1 | 2,
   item: IBox | ITabs,
   render: ViewRenderer,

@@ -1,3 +1,4 @@
+import React from 'react'
 import { CSSProperties, useState } from 'react'
 import { useDrag } from 'react-dnd'
 import { DropZone } from './DropZone'
@@ -31,14 +32,14 @@ function transform(i: number, rank: 1 | 2, orientation: Orientation): BoxTransfo
 const INVISIBLE : CSSProperties= {display: 'none'}
 
 export const ViewContainer = ({ parent, rank, tabs, render, onChange }: ViewContainerProps) => {
-  const [index, setIndex] = useState(0)
+  const [index/*, setIndex*/] = useState(0)
   const view = tabs.tabs[index]
   const [{ isDragging }, drag] = useDrag(
     () => ({
       type: 'VIEW',
       item: () => view,
       collect: monitor => ({ isDragging: monitor.isDragging() }),
-      end: (item, monitor) => {
+      end: (_item, monitor) => {
         if (monitor.didDrop()) {
           onChange(monitor.getDropResult() as BoxAction)
         }

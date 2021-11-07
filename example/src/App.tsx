@@ -1,8 +1,6 @@
 import { useReducer } from 'react'
-import { Box } from './dockable/Box'
-import { reducer } from './dockable/reducer2'
 import { sample2 as sample } from './samples'
-import { IView } from './dockable/types'
+import { IView, reducer, Box } from 'react-docky'
 
 function render(view: IView) {
   return <div style={{ background: view.id, color: 'white', opacity: 0.8 }} />

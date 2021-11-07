@@ -1,6 +1,6 @@
-import { BoxAction, reducer, simplify, BoxTransformType } from './reducer2'
-import { repr, wrap } from './util'
-import { IBox, ITabs, IView, Orientation } from './types'
+import { BoxAction, reducer, simplify, BoxTransformType } from '../reducer2'
+import { repr, wrap } from '../util'
+import { IBox, ITabs, IView, Orientation } from '../types'
 
 let IDS: Record<string, number> = {}
 

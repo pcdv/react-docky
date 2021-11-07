@@ -1,10 +1,7 @@
-import { useCallback, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { sample2 as sample } from './samples'
-import { IBox, IView } from './dockable/types'
 import './App.css'
-import { repr } from './dockable/util'
-import { Box } from './dockable/Box'
-import { BoxAction, reducer, ViewAction } from './dockable/reducer2'
+import {Box, BoxAction, reducer, repr, ViewAction, IView, IBox} from 'react-docky'
 
 function render(view: IView) {
   return (

@@ -1,4 +1,4 @@
-import { IBox } from './dockable/types'
+import { IBox } from 'react-docky'
 
 export const sample: IBox = {
   id: 'box0',
