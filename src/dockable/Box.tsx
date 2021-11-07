@@ -19,11 +19,7 @@ export const Box = ({ box, render, onChange }: BoxProps) => {
       <div key={box.id} className="" id={`box-${box.id}`}>
         <DropZone box={box} action="o1" position={horizontal ? 'top' : 'left'} />
         <DropZone box={box} action="o2" position={horizontal ? 'bottom' : 'right'} />
-        <SplitPane
-          split={horizontal ? 'vertical' : 'horizontal'}
-          className="box"
-          defaultSize="50%"
-        >
+        <SplitPane split={horizontal ? 'vertical' : 'horizontal'} className="box" defaultSize="50%">
           {renderAny(1, box.one, render, onChange, box)}
           {renderAny(2, box.two, render, onChange, box)}
         </SplitPane>
@@ -39,7 +35,7 @@ export const Box = ({ box, render, onChange }: BoxProps) => {
 
 export function renderAny(
   rank: 1 | 2,
-  item: IBox | ITabs ,
+  item: IBox | ITabs,
   render: ViewRenderer,
   onChange: (action: BoxAction | ViewAction) => void,
   parent: IBox
