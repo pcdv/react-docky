@@ -51,8 +51,7 @@ type BoxTransform = (box: IBox, view: IView) => IBox | ITabs | null
 const id = () => genId('box')
 
 function rotate(box: IBox): IBox {
-  box.orientation = box.orientation === 'horizontal' ? 'vertical' : 'horizontal'
-  return box
+  return { ...box, orientation : box.orientation === 'horizontal' ? 'vertical' : 'horizontal' }
 }
 
 const BOX_TRANSFORMS: Record<BoxTransformType, BoxTransform> = {
