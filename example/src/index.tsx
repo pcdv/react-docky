@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom'
 import App from './App2'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
-import 'react-docky/assets/index.css'
-import 'react-docky/assets/react-splitpane.css'
+import 'react-docky/index.css'
+import 'react-docky/react-splitpane.css'
 
 ReactDOM.render(
   <React.StrictMode>

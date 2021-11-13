@@ -1,6 +1,6 @@
 {
-  "name": "react-dock-lib",
-  "version": "1.0.0",
+  "name": "react-docky",
+  "version": "0.0.0",
   "description": "Simple docking layout for React",
   "main": "./lib/cjs/index.js",
   "module": "./lib/esm/index.js",
@@ -10,16 +10,18 @@
   "devDependencies": {
     "@types/react": "^17.0.34",
     "@types/react-dom": "^17.0.11",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
     "typescript": "^4.4.4"
   },
   "peerDependencies": {
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dnd": "^14.0.4",
+    "react-dnd-html5-backend": "^14.0.4",
+    "react-dom": "^17.0.2",
+    "react-split-pane": "^0.1.92"
   },
   "scripts": {
-    "build": "yarn build:esm ",
+    "build": "yarn build:esm",
+    "build:esm-esbuild": "esbuild --format=esm --bundle --external:react --external:react-dom --external:react-split-pane --external:react-dnd --external:react-dnd-html5-backend --platform=neutral --outdir=lib/esm src/index.ts",
     "build:esm": "tsc",
     "build:cjs": "tsc --module commonjs --outDir lib/cjs"
   },
