@@ -20,7 +20,7 @@
     "react-split-pane": "^0.1.92"
   },
   "scripts": {
-    "build": "yarn build:esm",
+    "build": "yarn build:esm && cp -r assets lib/esm",
     "build:esm-esbuild": "esbuild --format=esm --bundle --external:react --external:react-dom --external:react-split-pane --external:react-dnd --external:react-dnd-html5-backend --platform=neutral --outdir=lib/esm src/index.ts",
     "build:esm": "tsc",
     "build:cjs": "tsc --module commonjs --outDir lib/cjs"
