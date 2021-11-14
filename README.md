@@ -16,3 +16,9 @@ Sandbox: https://codesandbox.io/s/react-docky-forked-s5hib
 *Maybe todo*
  * Maximize view?
  * Floating mode?
+
+## Alternatives
+
+These projects do similar things:
+ * https://github.com/ticlo/rc-dock
+ * https://github.com/nomcopter/react-mosaic
