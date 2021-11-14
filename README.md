@@ -2,16 +2,20 @@
 
 *Work in progress*
 
-Allows to rearrange layout by dragging and resizing views.
+Allows rearranging the layout by dragging and resizing views.
 
 Sandbox: https://codesandbox.io/s/react-docky-forked-s5hib
 
+Examples:
+ * [Simple](https://github.com/pcdv/react-docky/blob/main/example/src/App.tsx) (same as in sandbox but in TS)
+ * [With undo](https://github.com/pcdv/react-docky/blob/main/example/src/App2.tsx)
+
 *Todo*
  * Stack views on top of each other (tabbed view)
- * Drag single view or tabbed group
- * Store split size into state
- * Skins / customize look and feel
- * More tests, more examples
+ * Drag tabbed group
+ * Store splitter size in state
+ * Skins / easy customization of look and feel
+ * More tests and examples
 
 *Maybe todo*
  * Maximize view?
@@ -19,6 +23,6 @@ Sandbox: https://codesandbox.io/s/react-docky-forked-s5hib
 
 ## Alternatives
 
-These projects do similar things:
+Similar (and more mature) projects with different approaches:
  * https://github.com/ticlo/rc-dock
  * https://github.com/nomcopter/react-mosaic
