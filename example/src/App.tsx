@@ -1,6 +1,6 @@
 import { useReducer } from 'react'
 import { sample2 as sample } from './samples'
-import { IView, reducer, Box } from 'react-docky'
+import { IView, reducer, Dock } from 'react-docky'
 
 function render(view: IView) {
   return <div style={{ background: view.id, color: 'white', opacity: 0.8 }} />
@@ -8,7 +8,7 @@ function render(view: IView) {
 
 function App() {
   const [state, dispatch] = useReducer(reducer, sample)
-  return <Box box={state} render={render} dispatch={dispatch} />
+  return <Dock state={state} render={render} dispatch={dispatch} />
 }
 
 export default App

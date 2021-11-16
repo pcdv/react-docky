@@ -25,3 +25,6 @@ yarn-error.log*
 
 example/node_modules
 *.tgz
+
+/example/*lock*
+/example-vite/*lock*
