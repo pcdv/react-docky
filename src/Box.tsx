@@ -15,7 +15,7 @@ export const Box = ({ box }: BoxProps) => {
       <div key={box.id} className="" id={`box-${box.id}`}>
         <DropZone box={box} action="o1" position={horizontal ? 'top' : 'left'} />
         <DropZone box={box} action="o2" position={horizontal ? 'bottom' : 'right'} />
-        <SplitPane split={horizontal ? 'vertical' : 'horizontal'} className="box" defaultSize="50%">
+        <SplitPane split={horizontal ? 'vertical' : 'horizontal'} defaultSize="50%">
           {renderAny(1, box.one, box)}
           {renderAny(2, box.two, box)}
         </SplitPane>
@@ -29,22 +29,11 @@ export const Box = ({ box }: BoxProps) => {
   )
 }
 
-function renderAny(
-  rank: 1 | 2,
-  item: IBox | ITabs,
-  parent: IBox
-): React.ReactNode {
+function renderAny(rank: 1 | 2, item: IBox | ITabs, parent: IBox): React.ReactNode {
   switch (item.type) {
     case 'box':
       return <Box key={item.id} box={item} />
     case 'tabs':
-      return (
-        <ViewContainer
-          key={item.id}
-          tabs={item}
-          rank={rank}
-          parent={parent}
-        />
-      )
+      return <ViewContainer key={item.id} tabs={item} rank={rank} parent={parent} />
   }
 }
