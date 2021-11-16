@@ -1,16 +1,15 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { CSSProperties, useState } from 'react'
 import { useDrag } from 'react-dnd'
+import { DockContext } from '.'
 import { DropZone } from './DropZone'
-import { BoxAction, BoxTransformType, ViewAction } from './reducer2'
-import { Direction, IBox, ITabs, Orientation, ViewRenderer } from './types'
+import { BoxAction, BoxTransformType } from './reducer2'
+import { Direction, IBox, ITabs, Orientation } from './types'
 
 interface ViewContainerProps {
   parent: IBox
   rank: 1 | 2
   tabs: ITabs
-  render: ViewRenderer
-  dispatch: (action: BoxAction | ViewAction) => void
 }
 
 const directions: Direction[] = ['left', 'right', 'top', 'bottom']
@@ -31,7 +30,8 @@ function transform(i: number, rank: 1 | 2, orientation: Orientation): BoxTransfo
 
 const INVISIBLE : CSSProperties= {display: 'none'}
 
-export const ViewContainer = ({ parent, rank, tabs, render, dispatch: onChange }: ViewContainerProps) => {
+export const ViewContainer = ({ parent, rank, tabs}: ViewContainerProps) => {
+  const { render, dispatch} = useContext(DockContext)
   const [index/*, setIndex*/] = useState(0)
   const view = tabs.tabs[index]
   const [{ isDragging }, drag] = useDrag(
@@ -41,7 +41,7 @@ export const ViewContainer = ({ parent, rank, tabs, render, dispatch: onChange }
       collect: monitor => ({ isDragging: monitor.isDragging() }),
       end: (_item, monitor) => {
         if (monitor.didDrop()) {
-          onChange(monitor.getDropResult() as BoxAction)
+          dispatch(monitor.getDropResult() as BoxAction)
         }
       },
     }),
@@ -56,7 +56,7 @@ export const ViewContainer = ({ parent, rank, tabs, render, dispatch: onChange }
         {view.label || view.id}
         &nbsp;({tabs.id})
         <button
-          onClick={() => onChange({ type: 'kill', viewId: tabs.tabs[index].id, simplify: true })}
+          onClick={() => dispatch({ type: 'kill', viewId: tabs.tabs[index].id, simplify: true })}
         >
           {'\u2573'}
         </button>
