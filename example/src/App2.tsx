@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { sample2 as sample } from './samples'
+import {Dock, BoxAction, reducer, repr, ViewAction, IView, IBox} from 'react-docky'
 import './App.css'
-import {Box, BoxAction, reducer, repr, ViewAction, IView, IBox} from 'react-docky'
 
 function render(view: IView) {
   return (
@@ -37,7 +37,7 @@ function App() {
         &nbsp; {repr(box)}
       </div>
       <div id="desktop">
-        <Box key={box.id} box={box} render={render} dispatch={onChange} />
+        <Dock key={box.id} state={box} render={render} dispatch={onChange} />
       </div>
     </div>
   )
