@@ -1,6 +1,6 @@
-import { BoxAction, reducer, simplify, BoxTransformType } from '../reducer2'
-import { repr, wrap } from '../util'
-import { IBox, ITabs, IView, Orientation } from '../types'
+import { BoxAction, reducer, simplify, BoxTransformType } from './reducer2'
+import { repr, wrap } from './util'
+import { IBox, ITabs, IView, Orientation } from './types'
 
 let IDS: Record<string, number> = {}
 
@@ -109,4 +109,8 @@ describe('Buggy scenario?', () => {
 
   const S3 = reducer(S2, { type: 'o1', boxId, view })
   expect(repr(S3)).toBe('v(blue, h(v(green, orange), red))')
+
+  const S4 = reducer(S3, { type: 'r', boxId: S3.id, size: 300})
+  expect(repr(S4)).toBe('v(blue, h(v(green, orange), red))')
+  expect(S4).toHaveProperty('size', 300)
 })

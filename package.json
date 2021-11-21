@@ -8,10 +8,15 @@
   "style": "./assets/index.css",
   "license": "MIT",
   "devDependencies": {
+    "@babel/preset-env": "^7.16.4",
+    "@babel/preset-react": "^7.16.0",
+    "@babel/preset-typescript": "^7.16.0",
     "@types/hoist-non-react-statics": "^3.3.1",
+    "@types/jest": "^27.0.3",
     "@types/react": "^17.0.35",
     "@types/react-dom": "^17.0.11",
-    "typescript": "^4.4.4"
+    "jest": "^27.3.1",
+    "typescript": "^4.5.2"
   },
   "peerDependencies": {
     "react": "^17.0.2",
@@ -23,10 +28,11 @@
   "scripts": {
     "build": "yarn build:esm && yarn build:cjs",
     "build:esm": "tsc",
-    "build:cjs": "tsc --module commonjs --outDir lib/cjs"
+    "watch": "tsc -w",
+    "build:cjs": "tsc --module commonjs --outDir lib/cjs",
+    "test": "jest"
   },
   "dependencies": {
-    "@types/jest": "^27.0.2",
     "@types/react-dnd": "^3.0.2",
     "@types/react-dnd-html5-backend": "^3.0.2",
     "react-split-pane": "^0.1.92"

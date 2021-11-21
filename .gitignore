@@ -28,3 +28,6 @@ example/node_modules
 
 /example/*lock*
 /example-vite/*lock*
+
+# yarn is buggy with npm link so I use npm to install dependencies
+yarn.lock
