@@ -1,21 +1,29 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import SplitPane from 'react-split-pane'
 import { DropZone } from './DropZone'
 import { ViewContainer } from './ViewContainer'
 import { IBox, ITabs } from './types'
+import { DockContext } from '.'
 
 interface BoxProps {
   box: IBox
 }
 
 export const Box = ({ box }: BoxProps) => {
+  console.log('RENDER', box);
+  
   const horizontal = box.orientation === 'horizontal'
+  const { dispatch, state } = useContext(DockContext)
   if (box.one && box.two)
     return (
       <div key={box.id} className="" id={`box-${box.id}`}>
         <DropZone box={box} action="o1" position={horizontal ? 'top' : 'left'} />
         <DropZone box={box} action="o2" position={horizontal ? 'bottom' : 'right'} />
-        <SplitPane split={horizontal ? 'vertical' : 'horizontal'} defaultSize="50%">
+        <SplitPane
+          split={horizontal ? 'vertical' : 'horizontal'}
+          size={box.size || '50%'}
+          onDragFinished={size => dispatch({ type: 'r', boxId: box.id, size }, state.current)}
+        >
           {renderAny(1, box.one, box)}
           {renderAny(2, box.two, box)}
         </SplitPane>

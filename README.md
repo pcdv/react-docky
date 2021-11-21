@@ -13,7 +13,6 @@ Examples:
 *Todo*
  * Stack views on top of each other (tabbed view)
  * Drag tabbed group
- * Store splitter size in state
  * Skins / easy customization of look and feel
  * More tests and examples
 
@@ -23,6 +22,6 @@ Examples:
 
 ## Alternatives
 
-Similar (and more mature) projects with different approaches:
+Similar (and more mature) projects with a different approach:
  * https://github.com/ticlo/rc-dock
  * https://github.com/nomcopter/react-mosaic

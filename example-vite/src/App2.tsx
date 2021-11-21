@@ -1,6 +1,6 @@
-import { useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { sample2 as sample } from './samples'
-import {Dock, BoxAction, reducer, repr, ViewAction, IView, IBox} from 'react-docky'
+import { Dock, repr, IView, IBox } from 'react-docky'
 import './App.css'
 
 function render(view: IView) {
@@ -14,30 +14,33 @@ function render(view: IView) {
  */
 function App() {
   const [states, setStates] = useState<IBox[]>(() => [sample])
+  
+  // gotta use a ref, otherwise looks like onChange captures some old array and
+  // causes jumps in time
+  const ref = useRef(states)
 
-  // avoid accessing old state in onChange (also tried with useCallback but looks like some old versions of the callback are in the wild, keeping reference to an old state)
-  // https://stackoverflow.com/questions/57847594/react-hooks-accessing-up-to-date-state-from-within-a-callback
-  // NB: the problem does not happen with useReducer(), not sure why...
-  const stateRef = useRef<IBox[]>(states)
-  stateRef.current = states
+  const onChange = useCallback(
+    (s: IBox) => {
+      const newStates = [s].concat(ref.current)
+      setStates(newStates)
+      ref.current = newStates
+    },
+    [states]
+  )
 
-  const onChange = (action: BoxAction | ViewAction) => {
-    const oldState = stateRef.current[0] || sample
-    const newState = reducer(oldState, action)
-    setStates([newState].concat(stateRef.current))
-  }
+  const undo = useCallback(() => setStates(states.slice(1)), [states])
 
   const box = states[0] || sample
 
   return (
     <div>
       <div id="actions">
-        <button onClick={() => setStates(states.slice(1))}>Undo</button>
+        <button onClick={undo}>Undo</button>
         &nbsp; States: {states.length}
         &nbsp; {repr(box)}
       </div>
       <div id="desktop">
-        <Dock key={box.id} state={box} render={render} dispatch={onChange} />
+        <Dock key={box.id} state={box} render={render} onChange={onChange} />
       </div>
     </div>
   )

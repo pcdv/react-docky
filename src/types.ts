@@ -13,6 +13,7 @@ export interface IBox {
   orientation: Orientation
   one?: IBox | ITabs | null
   two?: IBox | ITabs | null
+  size?: number
 }
 
 export interface ITabs {

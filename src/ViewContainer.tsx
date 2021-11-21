@@ -31,7 +31,7 @@ function transform(i: number, rank: 1 | 2, orientation: Orientation): BoxTransfo
 const INVISIBLE : CSSProperties= {display: 'none'}
 
 export const ViewContainer = ({ parent, rank, tabs}: ViewContainerProps) => {
-  const { render, dispatch} = useContext(DockContext)
+  const { render, dispatch, state} = useContext(DockContext)
   const [index/*, setIndex*/] = useState(0)
   const view = tabs.tabs[index]
   const [{ isDragging }, drag] = useDrag(
@@ -41,7 +41,7 @@ export const ViewContainer = ({ parent, rank, tabs}: ViewContainerProps) => {
       collect: monitor => ({ isDragging: monitor.isDragging() }),
       end: (_item, monitor) => {
         if (monitor.didDrop()) {
-          dispatch(monitor.getDropResult() as BoxAction)
+          dispatch(monitor.getDropResult() as BoxAction, state.current)
         }
       },
     }),
@@ -56,7 +56,7 @@ export const ViewContainer = ({ parent, rank, tabs}: ViewContainerProps) => {
         {view.label || view.id}
         &nbsp;({tabs.id})
         <button
-          onClick={() => dispatch({ type: 'kill', viewId: tabs.tabs[index].id, simplify: true })}
+          onClick={() => dispatch({ type: 'kill', viewId: tabs.tabs[index].id, simplify: true }, state.current)}
         >
           {'\u2573'}
         </button>

@@ -46,12 +46,20 @@ export type ViewAction = {
   simplify?: boolean
 }
 
-type BoxTransform = (box: IBox, view: IView) => IBox | ITabs | null
+export type ResizeAction = {
+  type: 'r'
+  boxId: string
+  size: number
+}
+
+export type DockAction = ViewAction | BoxAction | ResizeAction
+
+type BoxTransform = (box: IBox, view: IView) => IBox
 
 const id = () => genId('box')
 
 function rotate(box: IBox): IBox {
-  return { ...box, orientation : box.orientation === 'horizontal' ? 'vertical' : 'horizontal' }
+  return { ...box, orientation: box.orientation === 'horizontal' ? 'vertical' : 'horizontal' }
 }
 
 const BOX_TRANSFORMS: Record<BoxTransformType, BoxTransform> = {
@@ -66,6 +74,8 @@ const BOX_TRANSFORMS: Record<BoxTransformType, BoxTransform> = {
   o1: (b, v) => rotate({ ...b, two: { ...b, id: id() }, one: wrap(v) }),
   o2: (b, v) => rotate({ ...b, one: { ...b, id: id() }, two: wrap(v) }),
 }
+
+const resize = (box: IBox, size: number) => ({ ...box, size })
 
 /**
  * Remove dead views, recursively clear empty containers.
@@ -85,8 +95,10 @@ export function simplify(s: IBox | ITabs | null | undefined): IBox | ITabs | nul
   }
 }
 
-export function reducer(s: IBox | ITabs | null | undefined, action: BoxAction | ViewAction): IBox {
-  if (action.type !== 'kill') s = reducer0(s, { type: 'kill', viewId: action.view.id })
+export function reducer(s: IBox | ITabs | null | undefined, action: DockAction): IBox {
+  if (action.type !== 'kill' && action.type !== 'r')
+    s = reducer0(s, { type: 'kill', viewId: action.view.id })
+
   s = reducer0(s, action)
 
   if (action.type !== 'kill' || action.simplify) {
@@ -100,13 +112,21 @@ export function reducer(s: IBox | ITabs | null | undefined, action: BoxAction | 
   return { type: 'box', orientation: 'horizontal', id: 'root', one: s }
 }
 
-function reducer0(
-  s: IBox | ITabs | null | undefined,
-  action: BoxAction | ViewAction
-): IBox | ITabs | null | undefined {
-  if (!s) return null
+function boxReducer(s: IBox, action: DockAction): IBox {
+  if (action.type != 'kill' && s.id === action.boxId) {
+    if (action.type === 'r') return resize(s, action.size)
+    else return BOX_TRANSFORMS[action.type](s, action.view)
+  }
 
-  if (action.type === 'kill' && s.type === 'tabs') {
+  return {
+    ...s,
+    one: reducer0(s.one, action),
+    two: reducer0(s.two, action),
+  }
+}
+
+function tabReducer(s: ITabs, action: DockAction): ITabs {
+  if (action.type === 'kill') {
     const pos = s.tabs.findIndex(v => v.id === action.viewId)
     return pos === -1
       ? s
@@ -115,18 +135,20 @@ function reducer0(
           tabs: [...s.tabs.slice(0, pos), { ...s.tabs[pos], dead: true }, ...s.tabs.slice(pos + 1)],
         }
   }
+  return s
+}
 
-  if (s.type === 'box' && action.type !== 'kill') {
-    if (action.boxId === s.id) return BOX_TRANSFORMS[action.type](s, action.view)
-  }
+function reducer0(
+  s: IBox | ITabs | null | undefined,
+  action: DockAction
+): IBox | ITabs | null | undefined {
+  if (!s) return null
 
-  // propagate to children
-  if (s.type === 'box') {
-    return {
-      ...s,
-      one: reducer0(s.one, action),
-      two: reducer0(s.two, action),
-    }
+  switch (s.type) {
+    case 'box':
+      return boxReducer(s, action)
+    case 'tabs':
+      return tabReducer(s, action)
   }
 
   return s
