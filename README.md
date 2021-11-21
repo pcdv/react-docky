@@ -7,8 +7,8 @@ Allows rearranging the layout by dragging and resizing views.
 Sandbox: https://codesandbox.io/s/react-docky-forked-s5hib
 
 Examples:
- * [Simple](https://github.com/pcdv/react-docky/blob/main/example/src/App.tsx) (same as in sandbox but in TS)
- * [With undo](https://github.com/pcdv/react-docky/blob/main/example/src/App2.tsx)
+ * [Uncontrolled](https://github.com/pcdv/react-docky/blob/main/example/src/App.tsx)
+ * [Controlled, with undo](https://github.com/pcdv/react-docky/blob/main/example/src/App2.tsx)
 
 *Todo*
  * Stack views on top of each other (tabbed view)
@@ -20,16 +20,22 @@ Examples:
  * Maximize view?
  * Floating mode?
 
+## Install
+
+```
+npm install react-docky
+```
+
 ## Build
 
-```sh
+```
 rm -rf lib
 npm install
 npm build
 ```
 
 To test changes in an example app
-```sh
+```
 # in one terminal
 npm watch
 
@@ -46,6 +52,6 @@ npm test
 
 ## Alternatives
 
-Similar (and more mature) projects with a different approach:
+Similar projects with a different approach:
  * https://github.com/ticlo/rc-dock
  * https://github.com/nomcopter/react-mosaic
