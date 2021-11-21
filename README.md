@@ -12,7 +12,7 @@ Examples:
 
 *Todo*
  * Stack views on top of each other (tabbed view)
- * Drag tabbed group
+ * Drag group of views / single view
  * Skins / easy customization of look and feel
  * More tests and examples
 
