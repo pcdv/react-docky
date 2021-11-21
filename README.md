@@ -20,6 +20,30 @@ Examples:
  * Maximize view?
  * Floating mode?
 
+## Build
+
+```sh
+rm -rf lib
+npm install
+npm build
+```
+
+To test changes in an example app
+```sh
+# in one terminal
+npm watch
+
+# in another terminal
+cd example
+npm install
+npm run dev
+```
+
+To run tests
+```sh
+npm test
+```
+
 ## Alternatives
 
 Similar (and more mature) projects with a different approach:
