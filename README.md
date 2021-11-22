@@ -4,7 +4,8 @@
 
 Allows rearranging the layout by dragging and resizing views.
 
-Sandbox: https://codesandbox.io/s/react-docky-forked-s5hib
+[Demo](https://s5hib.csb.app/) - 
+[Sandbox](https://codesandbox.io/s/react-docky-forked-s5hib)
 
 Examples:
  * [Uncontrolled](https://github.com/pcdv/react-docky/blob/main/example/src/App.tsx)
