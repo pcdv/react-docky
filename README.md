@@ -12,7 +12,6 @@ Examples:
  * [Controlled, with undo](https://github.com/pcdv/react-docky/blob/main/example/src/App2.tsx)
 
 *Todo*
- * Stack views on top of each other (tabbed view)
  * Drag group of views / single view
  * Skins / easy customization of look and feel
  * More tests and examples

@@ -31,3 +31,5 @@ example/node_modules
 
 # yarn is buggy with npm link so I use npm to install dependencies
 yarn.lock
+
+pnpm-lock.yaml

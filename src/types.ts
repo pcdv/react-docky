@@ -1,4 +1,4 @@
-import { ReactElement } from "react"
+import { ReactElement } from 'react'
 
 /**
  * Provided by the user, renders a view, identified by its viewType and id.
@@ -20,6 +20,7 @@ export interface ITabs {
   id: string
   type: 'tabs'
   tabs: IView[]
+  active?: number
 }
 
 export interface IView {

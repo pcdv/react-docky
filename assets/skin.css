@@ -1,0 +1,65 @@
+.rd-frame-header,
+.rd-frame-footer {
+  box-sizing: border-box;
+  background: #eaeaea;
+  color: #444;
+  font-family: sans-serif;
+  font-size: 11px;
+}
+
+.rd-frame-header {
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  display: flex;
+  height: 22px;
+}
+
+.rd-frame-header > div {
+  margin: 5px 8px;
+}
+
+.rd-frame-header > button {
+  background: #eaeaea;
+  position: absolute;
+  right: 3px;
+  top: 2px;
+
+  border-radius: 3px;
+  padding: 4px;
+  border: none;
+  height: 18px;
+  width: 18px;
+
+  font-size: 6px;
+}
+
+.rd-frame-header > button:hover {
+  background: #ccc;
+}
+
+.rd-frame-footer {
+  display: flex;
+  height: 22px;
+  padding: 0;
+}
+
+.rd-frame-footer button {
+  margin: 0;
+  border: none;
+  font-family: sans-serif;
+  font-size: 11px;
+  padding: 0 7px;
+  border-top: 2px solid #ddd;
+  background: #eaeaea;
+  color: #444;
+}
+
+.rd-frame-footer button.active {
+  /* padding-top: -1px; */
+  /* border-top-left-radius: 3px; */
+  border-top-right-radius: 3px;
+  border-top: 1px solid #999;
+  border-left: 1px solid #999;
+  background: #ccc;
+  color: #333;
+}

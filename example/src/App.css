@@ -1,5 +1,5 @@
 body {
-  background: lightsteelblue;
+  /* background: lightsteelblue; */
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -19,7 +19,7 @@ code {
 
 #desktop {
   position: fixed;
-  top: 70px;
+  top: 50px;
   bottom: 15px;
   left: 15px;
   right: 15px;

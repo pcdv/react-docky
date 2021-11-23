@@ -14,7 +14,7 @@ function render(view: IView) {
  */
 function App() {
   const [states, setStates] = useState<IBox[]>(() => [sample])
-  
+
   // gotta use a ref, otherwise looks like onChange captures some old array and
   // causes jumps in time
   const ref = useRef(states)
@@ -28,7 +28,11 @@ function App() {
     [states]
   )
 
-  const undo = useCallback(() => setStates(states.slice(1)), [states])
+  const undo = useCallback(() => {
+    const newStates = states.slice(1)
+    setStates(newStates)
+    ref.current = newStates
+  }, [states])
 
   const box = states[0] || sample
 

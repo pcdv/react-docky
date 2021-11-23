@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useRef, useReducer, MutableRefObject } from 'react'
 import { Box } from './Box'
-import { DockAction, reducer } from './reducer2'
+import { DockAction, reducer } from './reducer'
 import { IBox, ViewRenderer } from './types'
 
 interface DockCtx {
@@ -9,7 +9,8 @@ interface DockCtx {
   dispatch: (action: DockAction, oldState: IBox) => void
 }
 
-export const DockContext = createContext<DockCtx>(null as any)
+const DEFAULT_CTX = {dispatch: () => {}, render: () => {}, state: {}} as unknown as DockCtx
+export const DockContext = createContext<DockCtx>(DEFAULT_CTX)
 
 interface Props {
   initialState?: IBox

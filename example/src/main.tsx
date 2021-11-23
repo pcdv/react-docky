@@ -4,6 +4,7 @@ import App from './App2'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import 'react-docky/assets/index.css'
+import 'react-docky/assets/skin.css'
 import 'react-docky/assets/react-splitpane.css'
 
 ReactDOM.render(

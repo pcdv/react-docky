@@ -12,6 +12,13 @@
   opacity: 0.4;
 }
 
+.dz-trigger.over {
+  top: 20%;
+  bottom: 20%;
+  left: 20%;
+  right: 20%;
+}
+
 .dz-trigger.left,
 .dz-trigger.right {
   width: 10px;
@@ -42,17 +49,11 @@
   bottom: 0;
 }
 
-.dz-trigger.over {
-  left: 11px;
-  height: 5px;
-  top: 10px;
-  right: 11px;
-}
-
 .drop-zone {
   position: absolute;
   background: grey;
-  opacity: 0.6;
+  opacity: 0.9;
+  border: solid 3px #222;
 }
 
 .drop-zone.over {
@@ -60,6 +61,7 @@
   right: 0;
   top: 0;
   bottom: 0;
+  opacity: 0.8;
 }
 
 .drop-zone.left {
@@ -118,37 +120,4 @@
   flex-grow: 1;
 }
 
-.rd-frame-header {
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-  background: #eee;
-  color: #333;
-  font-size: 12px;
-  font-weight: bold;
-  display: flex;
-  height: 17px;
-  padding: 5px 5px 2px 7px;
-}
 
-.rd-frame-header > button:hover {
-  background: #f7f7f7;
-}
-.rd-frame-header > button {
-  border-radius: 5px;
-  padding: 4px;
-  font-size: 6px;
-  font-family: sans-serif;
-  position: absolute;
-  right: 3px;
-  border: none;
-  height: 18px;
-  width: 18px;
-  margin-top: -1.5px;
-}
-
-.rd-frame-footer {
-  font-size: 12px;
-  display: flex;
-  height: 16px;
-  padding: 2px 5px;
-}

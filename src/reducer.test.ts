@@ -1,4 +1,4 @@
-import { BoxAction, reducer, simplify, BoxTransformType } from './reducer2'
+import { BoxAction, reducer, simplify, BoxTransformType } from './reducer'
 import { repr, wrap } from './util'
 import { IBox, ITabs, IView, Orientation } from './types'
 

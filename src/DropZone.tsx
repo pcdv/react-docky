@@ -1,7 +1,7 @@
 import React from 'react'
 import { FC } from 'react'
 import { useDrop } from 'react-dnd'
-import { BoxAction, BoxTransformType } from './reducer2'
+import { BoxAction, BoxTransformType } from './reducer'
 import { Direction, IBox, IView } from './types'
 
 /**

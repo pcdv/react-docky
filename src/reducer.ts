@@ -1,13 +1,13 @@
 /*
-          o1
-+---------+----------+
-|    x1   |    x2    |
-|         |          |
-|a1     i1|a2      i2|
-|         |          |
-|    y1   |    y2    |
-+---------+----------+
-          o2
+           o1
++----------+----------+
+|    x1    |    x2    |
+|          |          |
+|a1  d1  i1|a2  d2  i2|
+|          |          |
+|    y1    |    y2    |
++----------+----------+
+           o2
 
 x = h OR v
 
@@ -30,7 +30,19 @@ h(U, V) ^ y2(W) = h(U, v(V, W))
 import { IBox, ITabs, IView } from './types'
 import { genId, wrap } from './util'
 
-export type BoxTransformType = 'i1' | 'i2' | 'a1' | 'a2' | 'x1' | 'x2' | 'y1' | 'y2' | 'o1' | 'o2'
+export type BoxTransformType =
+  | 'i1'
+  | 'i2'
+  | 'a1'
+  | 'a2'
+  | 'x1'
+  | 'x2'
+  | 'y1'
+  | 'y2'
+  | 'o1'
+  | 'o2'
+  | 'd1'
+  | 'd2'
 
 export type BoxAction = {
   type: BoxTransformType
@@ -58,19 +70,32 @@ type BoxTransform = (box: IBox, view: IView) => IBox
 
 const id = () => genId('box')
 
+// undefined size is to default to 50% and avoid having a size that is bigger than the pane
+const und = undefined
+
 function rotate(box: IBox): IBox {
-  return { ...box, orientation: box.orientation === 'horizontal' ? 'vertical' : 'horizontal' }
+  return {
+    ...box,
+    size: und,
+    orientation: box.orientation === 'horizontal' ? 'vertical' : 'horizontal',
+  }
+}
+
+function addView(tabs: ITabs, view: IView) {
+  return { ...tabs, tabs: [...tabs.tabs, view], active: tabs.tabs.length }
 }
 
 const BOX_TRANSFORMS: Record<BoxTransformType, BoxTransform> = {
-  i1: (b, v) => ({ ...b, one: { ...b, id: id(), two: wrap(v) } }),
-  a1: (b, v) => ({ ...b, one: { ...b, id: id(), one: wrap(v), two: b.one } }),
-  a2: (b, v) => ({ ...b, two: { ...b, id: id(), one: wrap(v) } }),
-  i2: (b, v) => ({ ...b, two: { ...b, id: id(), two: wrap(v), one: b.two } }),
-  x1: (b, v) => ({ ...b, one: rotate({ ...b, id: id(), one: wrap(v), two: b.one }) }),
-  y1: (b, v) => ({ ...b, one: rotate({ ...b, id: id(), two: wrap(v) }) }),
-  x2: (b, v) => ({ ...b, two: rotate({ ...b, id: id(), one: wrap(v) }) }),
-  y2: (b, v) => ({ ...b, two: rotate({ ...b, id: id(), one: b.two, two: wrap(v) }) }),
+  i1: (b, v) => ({ ...b, size: und, one: { ...b, id: id(), two: wrap(v) } }),
+  a1: (b, v) => ({ ...b, size: und, one: { ...b, id: id(), one: wrap(v), two: b.one } }),
+  a2: (b, v) => ({ ...b, size: und, two: { ...b, id: id(), one: wrap(v) } }),
+  i2: (b, v) => ({ ...b, size: und, two: { ...b, id: id(), two: wrap(v), one: b.two } }),
+  x1: (b, v) => ({ ...b, size: und, one: rotate({ ...b, id: id(), one: wrap(v), two: b.one }) }),
+  y1: (b, v) => ({ ...b, size: und, one: rotate({ ...b, id: id(), two: wrap(v) }) }),
+  x2: (b, v) => ({ ...b, size: und, two: rotate({ ...b, id: id(), one: wrap(v) }) }),
+  y2: (b, v) => ({ ...b, size: und, two: rotate({ ...b, id: id(), one: b.two, two: wrap(v) }) }),
+  d1: (b, v) => ({ ...b, size: und, one: addView(b.one as ITabs, v) }),
+  d2: (b, v) => ({ ...b, size: und, two: addView(b.two as ITabs, v) }),
   o1: (b, v) => rotate({ ...b, two: { ...b, id: id() }, one: wrap(v) }),
   o2: (b, v) => rotate({ ...b, one: { ...b, id: id() }, two: wrap(v) }),
 }

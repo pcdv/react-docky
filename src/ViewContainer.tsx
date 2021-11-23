@@ -3,7 +3,7 @@ import { CSSProperties, useState } from 'react'
 import { useDrag } from 'react-dnd'
 import { DockContext } from '.'
 import { DropZone } from './DropZone'
-import { BoxAction, BoxTransformType } from './reducer2'
+import { BoxAction, BoxTransformType } from './reducer'
 import { Direction, IBox, ITabs, Orientation } from './types'
 
 interface ViewContainerProps {
@@ -12,28 +12,26 @@ interface ViewContainerProps {
   tabs: ITabs
 }
 
-const directions: Direction[] = ['left', 'right', 'top', 'bottom']
-const horizontal = ['a', 'i', 'x', 'y']
+const DIR: Direction[] = ['left', 'right', 'top', 'bottom', 'over']
+const TRANSFORM: Record<Orientation, string> = {
+  horizontal: 'aixyd',
+  vertical: 'xyaid',
+}
 
 /**
  * Return the correct transform type according to direction, box orientation and
  * rank of container in box.
- *
- * @param i direction index in array
- * @param rank 1 or 2
- * @param orientation box orientation
  */
-function transform(i: number, rank: 1 | 2, orientation: Orientation): BoxTransformType {
-  const offset = orientation === 'horizontal' ? 0 : 2
-  return (horizontal[(i + offset) % 4] + rank) as BoxTransformType
+export function transform(index: number, rank: 1 | 2, orientation: Orientation): BoxTransformType {
+  return (TRANSFORM[orientation][index] + rank) as BoxTransformType
 }
 
-const INVISIBLE : CSSProperties= {display: 'none'}
+const INVISIBLE: CSSProperties = { display: 'none' }
 
-export const ViewContainer = ({ parent, rank, tabs}: ViewContainerProps) => {
-  const { render, dispatch, state} = useContext(DockContext)
-  const [index/*, setIndex*/] = useState(0)
-  const view = tabs.tabs[index]
+export const ViewContainer = ({ parent, rank, tabs }: ViewContainerProps) => {
+  const { render, dispatch, state } = useContext(DockContext)
+  const [index, setIndex] = useState(tabs.active || 0)
+  const view = tabs.tabs[index] || tabs.tabs[0]
   const [{ isDragging }, drag] = useDrag(
     () => ({
       type: 'VIEW',
@@ -51,21 +49,27 @@ export const ViewContainer = ({ parent, rank, tabs}: ViewContainerProps) => {
   if (tabs.tabs.length === 0) return null
 
   return (
-    <div className="views-container" id={`tabs-${tabs.id}`} style={isDragging ? INVISIBLE : undefined}>
+    <div
+      className="views-container"
+      id={`tabs-${tabs.id}`}
+      style={isDragging ? INVISIBLE : undefined}
+    >
       <div className="rd-frame-header" ref={drag}>
-        {view.label || view.id}
-        &nbsp;({tabs.id})
+        <div>{view.label || view.id}</div>
+
         <button
-          onClick={() => dispatch({ type: 'kill', viewId: tabs.tabs[index].id, simplify: true }, state.current)}
+          onClick={() =>
+            dispatch({ type: 'kill', viewId: tabs.tabs[index].id, simplify: true }, state.current)
+          }
         >
           {'\u2573'}
         </button>
       </div>
 
       <div key={view.id} className="view-wrapper">
-        {directions.map((position, i) => (
+        {DIR.map((position, i) => (
           <DropZone
-            key={tabs.id + i}
+            key={tabs.id + '-' + i}
             box={parent}
             accept={v => v.id !== view.id}
             position={position}
@@ -77,8 +81,14 @@ export const ViewContainer = ({ parent, rank, tabs}: ViewContainerProps) => {
 
       {tabs.tabs.length > 1 && (
         <div className="rd-frame-footer">
-          {tabs.tabs.map(t => (
-            <span key={t.id}>{t.label + ' '}</span>
+          {tabs.tabs.map((t, i) => (
+            <button
+              key={t.id}
+              className={` ${i === index ? 'active' : ''}`}
+              onClick={() => setIndex(i)}
+            >
+              {t.label + ' '}
+            </button>
           ))}
         </div>
       )}
