@@ -9,6 +9,7 @@ import { Direction, IBox, IView } from './types'
  */
 function dropAction(boxId: string, view: IView, type: BoxTransformType): BoxAction {
   return {
+    actionType: 'box',
     type,
     boxId,
     view,

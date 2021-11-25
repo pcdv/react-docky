@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { CSSProperties, useState } from 'react'
+import { CSSProperties } from 'react'
 import { useDrag } from 'react-dnd'
 import { DockContext } from '.'
 import { DropZone } from './DropZone'
@@ -30,7 +30,7 @@ const INVISIBLE: CSSProperties = { display: 'none' }
 
 export const ViewContainer = ({ parent, rank, tabs }: ViewContainerProps) => {
   const { render, dispatch, state } = useContext(DockContext)
-  const [index, setIndex] = useState(tabs.active || 0)
+  const index = tabs.active || 0
   const idx = index >= tabs.tabs.length ? tabs.tabs.length - 1 : index
   const view = tabs.tabs[idx] || tabs.tabs[0]
   const [{ isDragging }, drag] = useDrag(
@@ -59,7 +59,7 @@ export const ViewContainer = ({ parent, rank, tabs }: ViewContainerProps) => {
         <div>{view.label || view.id}</div>
 
         <button
-          onClick={() => dispatch({ type: 'kill', viewId: view.id, simplify: true }, state.current)}
+          onClick={() => dispatch({ actionType: 'view', type: 'kill', viewId: view.id, simplify: true }, state.current)}
         >
           {'\u2573'}
         </button>
@@ -88,7 +88,7 @@ export const ViewContainer = ({ parent, rank, tabs }: ViewContainerProps) => {
             <button
               key={t.id}
               className={` ${i === idx ? 'active' : ''}`}
-              onClick={() => setIndex(i)}
+              onClick={() => dispatch({actionType: 'tabs', type: 'activate', tabsId: tabs.id, active: i}, state.current)}
             >
               {t.label + ' '}
             </button>

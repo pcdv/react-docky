@@ -22,7 +22,7 @@ export const Box = ({ box }: BoxProps) => {
         <SplitPane
           split={horizontal ? 'vertical' : 'horizontal'}
           size={box.size || '50%'}
-          onDragFinished={size => dispatch({ type: 'r', boxId: box.id, size }, state.current)}
+          onDragFinished={size => dispatch({ actionType: 'resize', boxId: box.id, size }, state.current)}
         >
           {renderAny(1, box.one, box)}
           {renderAny(2, box.two, box)}

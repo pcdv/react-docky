@@ -14,8 +14,8 @@ function genView(type: string): IView {
   }
 }
 
-function act(type: BoxTransformType, boxId: string = 'b0'): BoxAction {
-  return { type, view: genView('W'), boxId }
+function act(type: BoxTransformType, boxId: string = 'b0', view?: IView): BoxAction {
+  return { actionType: 'box', type, view: view || genView('W'), boxId }
 }
 
 const S0: IBox = {
@@ -63,7 +63,7 @@ describe('Transforms are working', () => {
 
 describe('Other transforms are working', () => {
   it('kill and simplify works', () => {
-    const S1 = reducer(S0, { type: 'kill', viewId: 'U' })
+    const S1 = reducer(S0, { actionType: 'view', type: 'kill', viewId: 'U' })
     expect(repr(S1)).toBe('h($U, V)')
     const S2 = simplify(S1 as IBox)
     expect(repr(S2)).toBe('V')
@@ -107,13 +107,13 @@ describe('Buggy scenario?', () => {
   const view = (S1.two as ITabs).tabs[0]
   expect(view).toHaveProperty('id', 'blue')
 
-  const S2 = reducer(S1, { type: 'kill', viewId: 'blue' })
+  const S2 = reducer(S1, { actionType: 'view', type: 'kill', viewId: 'blue' })
   expect(repr(S2)).toBe('v(h(v(green, orange), red), $blue)')
 
-  const S3 = reducer(S2, { type: 'o1', boxId, view })
+  const S3 = reducer(S2, act('o1', boxId, view))
   expect(repr(S3)).toBe('v(blue, h(v(green, orange), red))')
 
-  const S4 = reducer(S3, { type: 'r', boxId: S3.id, size: 300 })
+  const S4 = reducer(S3, { actionType: 'resize', boxId: S3.id, size: 300 })
   expect(repr(S4)).toBe('v(blue, h(v(green, orange), red))')
   expect(S4).toHaveProperty('size', 300)
 })
@@ -122,8 +122,11 @@ describe('Move view over other', () => {
   const S1 = h(tabs(['green', 'brown']), tabs(['red', 'blue'], 1))
   const boxId = S1.id
 
-  const S2 = reducer(S1, { type: 'd1', boxId, view: (S1.two as ITabs).tabs[1] })
+  const S2 = reducer(S1, act('d1', boxId, (S1.two as ITabs).tabs[1]))
   expect(repr(S2)).toBe('h(green-brown-blue, red)')
   expect(S2.one).toHaveProperty('active', 2)
   expect(S2.two).toHaveProperty('active', 0)
+
+  const S3 = reducer(S2, { actionType: 'tabs', type: 'activate', active: 1, tabsId: S2.one.id })
+  expect(S3.one).toHaveProperty('active', 1)
 })

@@ -45,26 +45,33 @@ export type BoxTransformType =
   | 'd2'
 
 export type BoxAction = {
-  type: BoxTransformType
+  actionType: 'box'
   boxId: string
+  type: BoxTransformType
   view: IView
 }
 
-export type ViewTransformType = 'kill'
-
-export type ViewAction = {
-  type: ViewTransformType
+export type KillViewAction = {
+  actionType: 'view'
+  type: 'kill'
   viewId: string
   simplify?: boolean
 }
 
-export type ResizeAction = {
-  type: 'r'
+type ResizeAction = {
+  actionType: 'resize'
   boxId: string
   size: number
 }
 
-export type DockAction = ViewAction | BoxAction | ResizeAction
+type ActivateAction = {
+  actionType: 'tabs'
+  type: 'activate'
+  tabsId: string
+  active: number
+}
+
+export type DockAction = KillViewAction | BoxAction | ResizeAction | ActivateAction
 
 type BoxTransform = (box: IBox, view: IView) => IBox
 
@@ -121,14 +128,14 @@ export function simplify(s: IBox | ITabs | null | undefined): IBox | ITabs | nul
 }
 
 export function reducer(s: IBox | ITabs | null | undefined, action: DockAction): IBox {
-  console.log(action);
-  
-  if (action.type !== 'kill' && action.type !== 'r')
-    s = reducer0(s, { type: 'kill', viewId: action.view.id })
+  console.log(action)
+
+  if (action.actionType === 'box')
+    s = reducer0(s, { actionType: 'view', type: 'kill', viewId: action.view.id })
 
   s = reducer0(s, action)
 
-  if (action.type !== 'kill' || action.simplify) {
+  if (action.actionType !== 'view' || action.simplify) {
     s = simplify(s)
   }
 
@@ -140,8 +147,8 @@ export function reducer(s: IBox | ITabs | null | undefined, action: DockAction):
 }
 
 function boxReducer(s: IBox, action: DockAction): IBox {
-  if (action.type != 'kill' && s.id === action.boxId) {
-    if (action.type === 'r') return resize(s, action.size)
+  if ((action.actionType === 'box' || action.actionType === 'resize') && s.id === action.boxId) {
+    if (action.actionType === 'resize') return resize(s, action.size)
     else return BOX_TRANSFORMS[action.type](s, action.view)
   }
 
@@ -153,15 +160,18 @@ function boxReducer(s: IBox, action: DockAction): IBox {
 }
 
 function tabReducer(s: ITabs, action: DockAction): ITabs {
-  if (action.type === 'kill') {
+  if (action.actionType === 'view') {
     const pos = s.tabs.findIndex(v => v.id === action.viewId)
     return pos === -1
       ? s
       : {
           ...s,
           tabs: [...s.tabs.slice(0, pos), { ...s.tabs[pos], dead: true }, ...s.tabs.slice(pos + 1)],
-          active: s.active && (s.active >= pos) ? s.active - 1 : s.active
+          active: s.active && s.active >= pos ? s.active - 1 : s.active,
         }
+  }
+  if (action.actionType === 'tabs' && action.tabsId === s.id) {
+    return { ...s, active: action.active }
   }
   return s
 }
