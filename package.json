@@ -30,7 +30,7 @@
     "build:esm": "tsc",
     "watch": "tsc -w",
     "build:cjs": "tsc --module commonjs --outDir lib/cjs",
-    "test": "jest"
+    "test": "jest --watch"
   },
   "dependencies": {
     "react": "^17.0.2",

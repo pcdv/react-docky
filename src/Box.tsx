@@ -42,6 +42,6 @@ function renderAny(rank: 1 | 2, item: IBox | ITabs, parent: IBox): React.ReactNo
     case 'box':
       return <Box key={item.id} box={item} />
     case 'tabs':
-      return <ViewContainer key={item.id} tabs={item} rank={rank} parent={parent} />
+      return <ViewContainer key={item.id + '-' + item.active} tabs={item} rank={rank} parent={parent} />
   }
 }

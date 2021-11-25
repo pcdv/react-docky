@@ -97,6 +97,9 @@ function h(first: IBox | ITabs | string, second: IBox | ITabs | string): IBox {
 function v(first: IBox | ITabs | string, second: IBox | ITabs | string): IBox {
   return box('vertical', first, second)
 }
+function tabs(views: string[], active?: number): ITabs {
+  return { type: 'tabs', tabs: views.map(genView), id: 't' + cnt++, active }
+}
 
 describe('Buggy scenario?', () => {
   const S1 = v(h(v('green', 'orange'), 'red'), 'blue')
@@ -110,7 +113,17 @@ describe('Buggy scenario?', () => {
   const S3 = reducer(S2, { type: 'o1', boxId, view })
   expect(repr(S3)).toBe('v(blue, h(v(green, orange), red))')
 
-  const S4 = reducer(S3, { type: 'r', boxId: S3.id, size: 300})
+  const S4 = reducer(S3, { type: 'r', boxId: S3.id, size: 300 })
   expect(repr(S4)).toBe('v(blue, h(v(green, orange), red))')
   expect(S4).toHaveProperty('size', 300)
+})
+
+describe('Move view over other', () => {
+  const S1 = h(tabs(['green', 'brown']), tabs(['red', 'blue'], 1))
+  const boxId = S1.id
+
+  const S2 = reducer(S1, { type: 'd1', boxId, view: (S1.two as ITabs).tabs[1] })
+  expect(repr(S2)).toBe('h(green-brown-blue, red)')
+  expect(S2.one).toHaveProperty('active', 2)
+  expect(S2.two).toHaveProperty('active', 0)
 })

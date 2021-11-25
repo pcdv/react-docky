@@ -31,7 +31,8 @@ const INVISIBLE: CSSProperties = { display: 'none' }
 export const ViewContainer = ({ parent, rank, tabs }: ViewContainerProps) => {
   const { render, dispatch, state } = useContext(DockContext)
   const [index, setIndex] = useState(tabs.active || 0)
-  const view = tabs.tabs[index] || tabs.tabs[0]
+  const idx = index >= tabs.tabs.length ? tabs.tabs.length - 1 : index
+  const view = tabs.tabs[idx] || tabs.tabs[0]
   const [{ isDragging }, drag] = useDrag(
     () => ({
       type: 'VIEW',
@@ -58,9 +59,7 @@ export const ViewContainer = ({ parent, rank, tabs }: ViewContainerProps) => {
         <div>{view.label || view.id}</div>
 
         <button
-          onClick={() =>
-            dispatch({ type: 'kill', viewId: tabs.tabs[index].id, simplify: true }, state.current)
-          }
+          onClick={() => dispatch({ type: 'kill', viewId: view.id, simplify: true }, state.current)}
         >
           {'\u2573'}
         </button>
@@ -69,9 +68,13 @@ export const ViewContainer = ({ parent, rank, tabs }: ViewContainerProps) => {
       <div key={view.id} className="view-wrapper">
         {DIR.map((position, i) => (
           <DropZone
-            key={tabs.id + '-' + i}
+            key={tabs.id + '-' + tabs.active + '-' + i}
             box={parent}
-            accept={v => v.id !== view.id}
+            accept={v => {
+              if (v.id !== view.id) return true
+              else console.log('Refuse', v.id, view.id)
+              return false
+            }}
             position={position}
             action={transform(i, rank, parent.orientation)}
           />
@@ -84,7 +87,7 @@ export const ViewContainer = ({ parent, rank, tabs }: ViewContainerProps) => {
           {tabs.tabs.map((t, i) => (
             <button
               key={t.id}
-              className={` ${i === index ? 'active' : ''}`}
+              className={` ${i === idx ? 'active' : ''}`}
               onClick={() => setIndex(i)}
             >
               {t.label + ' '}

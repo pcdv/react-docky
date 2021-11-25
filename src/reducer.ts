@@ -121,6 +121,8 @@ export function simplify(s: IBox | ITabs | null | undefined): IBox | ITabs | nul
 }
 
 export function reducer(s: IBox | ITabs | null | undefined, action: DockAction): IBox {
+  console.log(action);
+  
   if (action.type !== 'kill' && action.type !== 'r')
     s = reducer0(s, { type: 'kill', viewId: action.view.id })
 
@@ -158,6 +160,7 @@ function tabReducer(s: ITabs, action: DockAction): ITabs {
       : {
           ...s,
           tabs: [...s.tabs.slice(0, pos), { ...s.tabs[pos], dead: true }, ...s.tabs.slice(pos + 1)],
+          active: s.active && (s.active >= pos) ? s.active - 1 : s.active
         }
   }
   return s
