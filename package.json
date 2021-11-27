@@ -1,6 +1,6 @@
 {
   "name": "react-docky",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Simple docking layout for React",
   "main": "./lib/cjs/index.js",
   "module": "./lib/esm/index.js",
