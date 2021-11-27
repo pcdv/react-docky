@@ -21,6 +21,7 @@ export interface ITabs {
   type: 'tabs'
   tabs: IView[]
   active?: number
+  dead?: boolean
 }
 
 export interface IView {

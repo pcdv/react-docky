@@ -33,9 +33,9 @@
     "test": "jest --watch"
   },
   "dependencies": {
-    "react": "^17.0.2",
     "@types/react-dnd": "^3.0.2",
     "@types/react-dnd-html5-backend": "^3.0.2",
+    "react": "^17.0.2",
     "react-split-pane": "^0.1.92"
   },
   "eslintConfig": {

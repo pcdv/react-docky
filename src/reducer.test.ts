@@ -1,5 +1,5 @@
-import { BoxAction, reducer, simplify, BoxTransformType } from './reducer'
-import { repr, wrap } from './util'
+import { BoxAction, reducer, simplify, wrap, BoxTransformType } from './reducer'
+import { repr } from './util'
 import { IBox, ITabs, IView, Orientation } from './types'
 
 let IDS: Record<string, number> = {}
@@ -63,7 +63,7 @@ describe('Transforms are working', () => {
 
 describe('Other transforms are working', () => {
   it('kill and simplify works', () => {
-    const S1 = reducer(S0, { actionType: 'view', type: 'kill', viewId: 'U' })
+    const S1 = reducer(S0, { actionType: 'kill', viewType: 'tabs', viewId: 'U' })
     expect(repr(S1)).toBe('h($U, V)')
     const S2 = simplify(S1 as IBox)
     expect(repr(S2)).toBe('V')
@@ -107,7 +107,7 @@ describe('Buggy scenario?', () => {
   const view = (S1.two as ITabs).tabs[0]
   expect(view).toHaveProperty('id', 'blue')
 
-  const S2 = reducer(S1, { actionType: 'view', type: 'kill', viewId: 'blue' })
+  const S2 = reducer(S1, { actionType: 'kill', viewType: 'view', viewId: 'blue' })
   expect(repr(S2)).toBe('v(h(v(green, orange), red), $blue)')
 
   const S3 = reducer(S2, act('o1', boxId, view))
@@ -129,4 +129,19 @@ describe('Move view over other', () => {
 
   const S3 = reducer(S2, { actionType: 'tabs', type: 'activate', active: 1, tabsId: S2.one.id })
   expect(S3.one).toHaveProperty('active', 1)
+
+  const S4 = reducer(S3, { actionType: 'kill', viewType: 'tabs', viewId: S3.one.id, simplify: true})
+  expect(S4.two).toBeUndefined()
+  expect(repr(S4)).toBe('h(red, null)')
+})
+
+describe('Keeping sizes', () => {
+  const S1 = h('blue', v('green', 'orange'))
+  const boxId = S1.id
+
+  S1.size = 42
+
+  const S2 = reducer(S1, act('y1', boxId, (S1.two as any).one.tabs[0]))
+  expect(repr(S2)).toBe('h(v(blue, green), orange)')
+  expect(S2).toHaveProperty('size', 42)
 })

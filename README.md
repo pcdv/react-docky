@@ -12,7 +12,6 @@ Examples:
  * [Controlled, with undo](https://github.com/pcdv/react-docky/blob/main/example/src/App2.tsx)
 
 *Todo*
- * Drag group of views / single view
  * Skins / easy customization of look and feel
  * More tests and examples
 
@@ -26,18 +25,18 @@ Examples:
 npm install react-docky
 ```
 
-## Build
+## Build / test
 
 ```
 rm -rf lib
 npm install
-npm build
+npm run build
 ```
 
 To test changes in an example app
 ```
 # in one terminal
-npm watch
+npm run watch
 
 # in another terminal
 cd example

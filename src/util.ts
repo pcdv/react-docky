@@ -6,14 +6,6 @@ export function genId(prefix: string): string {
   return prefix + counter++
 }
 
-export function wrap(view: IView): ITabs {
-  return {
-    type: 'tabs',
-    id: genId('tabs'),
-    tabs: [view],
-  }
-}
-
 export function repr(x: IBox | ITabs | IView | null | undefined): string {
   if (!x) return 'null'
 

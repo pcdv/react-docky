@@ -28,7 +28,7 @@ h(U, V) ^ y2(W) = h(U, v(V, W))
 
 */
 import { IBox, ITabs, IView } from './types'
-import { genId, wrap } from './util'
+import { genId } from './util'
 
 export type BoxTransformType =
   | 'i1'
@@ -48,12 +48,12 @@ export type BoxAction = {
   actionType: 'box'
   boxId: string
   type: BoxTransformType
-  view: IView
+  view: IView | ITabs
 }
 
 export type KillViewAction = {
-  actionType: 'view'
-  type: 'kill'
+  actionType: 'kill'
+  viewType: 'view' | 'tabs'
   viewId: string
   simplify?: boolean
 }
@@ -73,7 +73,7 @@ type ActivateAction = {
 
 export type DockAction = KillViewAction | BoxAction | ResizeAction | ActivateAction
 
-type BoxTransform = (box: IBox, view: IView) => IBox
+type BoxTransform = (box: IBox, view: IView | ITabs) => IBox
 
 const id = () => genId('box')
 
@@ -88,8 +88,23 @@ function rotate(box: IBox): IBox {
   }
 }
 
-function addView(tabs: ITabs, view: IView) {
+function addView(tabs: ITabs, view: IView | ITabs) {
+  if (view.type === 'tabs')
+    return {
+      ...tabs,
+      tabs: [...tabs.tabs, ...view.tabs],
+      active: tabs.tabs.length + (tabs.active || 0),
+    }
   return { ...tabs, tabs: [...tabs.tabs, view], active: tabs.tabs.length }
+}
+
+export function wrap(view: IView | ITabs): ITabs {
+  if (view.type === 'tabs') return view
+  return {
+    type: 'tabs',
+    id: genId('tabs'),
+    tabs: [view],
+  }
 }
 
 const BOX_TRANSFORMS: Record<BoxTransformType, BoxTransform> = {
@@ -97,10 +112,10 @@ const BOX_TRANSFORMS: Record<BoxTransformType, BoxTransform> = {
   a1: (b, v) => ({ ...b, size: und, one: { ...b, id: id(), one: wrap(v), two: b.one } }),
   a2: (b, v) => ({ ...b, size: und, two: { ...b, id: id(), one: wrap(v) } }),
   i2: (b, v) => ({ ...b, size: und, two: { ...b, id: id(), two: wrap(v), one: b.two } }),
+  y1: (b, v) => ({ ...b, one: rotate({ ...b, id: id(), two: wrap(v) }) }),
+  y2: (b, v) => ({ ...b, two: rotate({ ...b, id: id(), one: b.two, two: wrap(v) }) }),
   x1: (b, v) => ({ ...b, size: und, one: rotate({ ...b, id: id(), one: wrap(v), two: b.one }) }),
-  y1: (b, v) => ({ ...b, size: und, one: rotate({ ...b, id: id(), two: wrap(v) }) }),
   x2: (b, v) => ({ ...b, size: und, two: rotate({ ...b, id: id(), one: wrap(v) }) }),
-  y2: (b, v) => ({ ...b, size: und, two: rotate({ ...b, id: id(), one: b.two, two: wrap(v) }) }),
   d1: (b, v) => ({ ...b, size: und, one: addView(b.one as ITabs, v) }),
   d2: (b, v) => ({ ...b, size: und, two: addView(b.two as ITabs, v) }),
   o1: (b, v) => rotate({ ...b, two: { ...b, id: id() }, one: wrap(v) }),
@@ -122,6 +137,7 @@ export function simplify(s: IBox | ITabs | null | undefined): IBox | ITabs | nul
       return one && two ? { ...s, one: one, two: two } : one ? one : two ? two : null
 
     case 'tabs':
+      if (s.dead) return null
       const tabs = s.tabs.filter(v => !v.dead)
       return tabs.length ? { ...s, tabs } : null
   }
@@ -131,11 +147,11 @@ export function reducer(s: IBox | ITabs | null | undefined, action: DockAction):
   console.log(action)
 
   if (action.actionType === 'box')
-    s = reducer0(s, { actionType: 'view', type: 'kill', viewId: action.view.id })
+    s = reducer0(s, { actionType: 'kill', viewType: action.view.type, viewId: action.view.id })
 
   s = reducer0(s, action)
 
-  if (action.actionType !== 'view' || action.simplify) {
+  if (action.actionType !== 'kill' || action.simplify) {
     s = simplify(s)
   }
 
@@ -160,7 +176,8 @@ function boxReducer(s: IBox, action: DockAction): IBox {
 }
 
 function tabReducer(s: ITabs, action: DockAction): ITabs {
-  if (action.actionType === 'view') {
+  if (action.actionType === 'kill') {
+    if (action.viewType === 'tabs' && action.viewId === s.id) return { ...s, dead: true }
     const pos = s.tabs.findIndex(v => v.id === action.viewId)
     return pos === -1
       ? s

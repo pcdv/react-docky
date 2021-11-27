@@ -10,8 +10,6 @@ interface BoxProps {
 }
 
 export const Box = ({ box }: BoxProps) => {
-  console.log('RENDER', box);
-  
   const horizontal = box.orientation === 'horizontal'
   const { dispatch, state } = useContext(DockContext)
   if (box.one && box.two)

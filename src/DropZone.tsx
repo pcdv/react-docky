@@ -1,6 +1,7 @@
 import React from 'react'
 import { FC } from 'react'
 import { useDrop } from 'react-dnd'
+import { ITabs } from '.'
 import { BoxAction, BoxTransformType } from './reducer'
 import { Direction, IBox, IView } from './types'
 
@@ -19,17 +20,17 @@ interface DZProps {
   box: IBox
   position: Direction
   action: BoxTransformType
-  accept?: (view: IView) => boolean
+  accept?: (view: IView | ITabs, action: BoxTransformType) => boolean
 }
 
 export const DropZone: FC<DZProps> = ({ box, position, action, accept }) => {
   const [{ canDrop, isOver, isVisible }, drop] = useDrop(() => ({
-    accept: 'VIEW',
-    canDrop: (item/*, monitor*/) => {
-      return accept ? accept(item as IView) : true
+    accept: ['VIEW', 'TABS'],
+    canDrop: (item /*, monitor*/) => {
+      return accept ? accept(item as IView | ITabs, action) : true
     },
     drop: item => {
-      console.log('drop on '+box.id)
+      console.log('drop on ' + box.id)
       return dropAction(box.id, item as IView, action)
     },
     collect: monitor => ({
