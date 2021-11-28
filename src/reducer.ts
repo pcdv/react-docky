@@ -89,6 +89,10 @@ function rotate(box: IBox): IBox {
 }
 
 function addView(tabs: ITabs, view: IView | ITabs) {
+  if (!tabs || !tabs.tabs) {
+    console.log('Invalid action', tabs);
+    return tabs
+  }
   if (view.type === 'tabs')
     return {
       ...tabs,
@@ -116,8 +120,8 @@ const BOX_TRANSFORMS: Record<BoxTransformType, BoxTransform> = {
   y2: (b, v) => ({ ...b, two: rotate({ ...b, id: id(), one: b.two, two: wrap(v) }) }),
   x1: (b, v) => ({ ...b, one: rotate({ ...b, id: id(), one: wrap(v), two: b.one }) }),
   x2: (b, v) => ({ ...b, two: rotate({ ...b, id: id(), one: wrap(v) }) }),
-  d1: (b, v) => ({ ...b, size: und, one: addView(b.one as ITabs, v) }),
-  d2: (b, v) => ({ ...b, size: und, two: addView(b.two as ITabs, v) }),
+  d1: (b, v) => ({ ...b, one: addView(b.one as ITabs, v) }),
+  d2: (b, v) => ({ ...b, two: addView(b.two as ITabs, v) }),
   o1: (b, v) => rotate({ ...b, two: { ...b, id: id() }, one: wrap(v) }),
   o2: (b, v) => rotate({ ...b, one: { ...b, id: id() }, two: wrap(v) }),
 }

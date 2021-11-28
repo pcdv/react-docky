@@ -1,12 +1,39 @@
 import { useCallback, useRef, useState } from 'react'
 import { sample2 as sample } from './samples'
-import { Dock, repr, IView, IBox } from 'react-docky'
+import { Dock, repr, IView, IBox, ITabs, BoxTransformType, reducer } from 'react-docky'
 import './App.css'
 
 function render(view: IView) {
   return (
     <div style={{ background: view.id, color: 'white', opacity: 0.8 }}>{view.dead && 'DEAD'}</div>
   )
+}
+
+function collectBoxIds(s?: IBox | ITabs, arr: string[] = []) {
+  if (s) {
+    if (s.type === 'box') {
+      arr.push(s.id)
+      collectBoxIds(s.one, arr)
+      collectBoxIds(s.two, arr)
+    }
+  }
+  return arr
+}
+
+function randomBoxId(s: IBox) {
+  const ids = collectBoxIds(s)
+  return ids[Math.floor(Math.random() * ids.length)]
+}
+
+function randomView(): IView {
+  const id = '#' + (((1 << 24) * Math.random()) | 0).toString(16)
+  return { id, type: 'view', viewType: 'random' }
+}
+
+function randomAction(): BoxTransformType {
+  const transforms = 'iaxyodddddddddddddddddd'
+  return (transforms[Math.floor(Math.random() * transforms.length)] +
+    Math.floor(1 + Math.random() * 2)) as BoxTransformType
 }
 
 /**
@@ -34,11 +61,17 @@ function App() {
     ref.current = newStates
   }, [states])
 
+  const addRandomView = useCallback(() => {
+    const s = reducer(states[0], { actionType: 'box', boxId: randomBoxId(states[0]), type: randomAction(), view: randomView() })
+    onChange(s)
+  }, [states])
+
   const box = states[0] || sample
 
   return (
     <div>
       <div id="actions">
+        <button onClick={addRandomView}>Add random view</button>
         <button onClick={undo}>Undo</button>
         &nbsp; States: {states.length}
         &nbsp; {repr(box)}

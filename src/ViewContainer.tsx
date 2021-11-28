@@ -157,7 +157,7 @@ const ViewButton = ({
   )
   return (
     <button key={view.id} ref={drag} className={` ${active ? 'active' : ''}`} onClick={onClick}>
-      {view.label + ' '}
+      {(view.label || view.id) + ' '}
     </button>
   )
 }
