@@ -1,4 +1,4 @@
-import { transform } from './ViewContainer'
+import { transform } from './ViewWrapper'
 
 describe('Test', () => {
   it('Properly map transforms in ViewContainer', () => {

@@ -64,7 +64,7 @@ type ResizeAction = {
   size: number
 }
 
-type ActivateAction = {
+export type ActivateAction = {
   actionType: 'tabs'
   type: 'activate'
   tabsId: string

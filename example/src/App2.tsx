@@ -4,8 +4,13 @@ import { Dock, repr, IView, IBox, ITabs, BoxTransformType, reducer } from 'react
 import './App.css'
 
 function render(view: IView) {
+  const [ count, setCount ] = useState(0)
   return (
-    <div style={{ background: view.id, color: 'white', opacity: 0.8 }}>{view.dead && 'DEAD'}</div>
+    <div key={view.id} style={{ background: view.id, color: 'white', opacity: 0.8, padding: '5px' }}>
+      {view.dead && 'DEAD'}
+      <button onClick={() => setCount(count + 1)}>Increment</button>
+      { count }
+    </div>
   )
 }
 
@@ -62,7 +67,12 @@ function App() {
   }, [states])
 
   const addRandomView = useCallback(() => {
-    const s = reducer(states[0], { actionType: 'box', boxId: randomBoxId(states[0]), type: randomAction(), view: randomView() })
+    const s = reducer(states[0], {
+      actionType: 'box',
+      boxId: randomBoxId(states[0]),
+      type: randomAction(),
+      view: randomView(),
+    })
     onChange(s)
   }, [states])
 
