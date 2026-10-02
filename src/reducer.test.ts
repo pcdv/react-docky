@@ -15,7 +15,7 @@ function genView(type: string): IView {
   }
 }
 
-function act(type: BoxTransformType, boxId: string = 'b0', view?: IView): BoxAction {
+function act(type: BoxTransformType, boxId: string = 'b0', view?: IView | ITabs): BoxAction {
   return { actionType: 'box', type, view: view || genView('W'), boxId }
 }
 
@@ -157,5 +157,41 @@ describe('Keeping sizes', () => {
     const S2 = reducer(S1, act('y1', boxId, ((S1.two as IBox).one as ITabs).tabs[0]))
     expect(repr(S2)).toBe('h(v(blue, green), orange)')
     expect(S2).toHaveProperty('size', 42)
+  })
+})
+
+describe('Active tab', () => {
+  const activeId = (t: ITabs) => t.tabs[t.active ?? 0].id
+
+  it('shows the active tab of a group dropped on another group', () => {
+    const S1 = h(tabs(['A', 'B', 'C'], 2), tabs(['X', 'Y'], 1))
+    const S2 = reducer(S1, act('d1', S1.id, S1.two as ITabs))
+    expect(repr(S2)).toBe('h(A-B-C-X-Y, null)')
+    expect(activeId(S2.one as ITabs)).toBe('Y')
+  })
+
+  it('shows a tab dropped on its own group', () => {
+    const S1 = h(tabs(['X', 'Y'], 0), 'Z')
+    const S2 = reducer(S1, act('d1', S1.id, (S1.one as ITabs).tabs[1]))
+    expect(repr(S2)).toBe('h(X-Y, Z)')
+    expect(activeId(S2.one as ITabs)).toBe('Y')
+  })
+
+  it('keeps the active tab when another tab is closed', () => {
+    const S1 = h(tabs(['A', 'B', 'C'], 2), 'Z')
+    const S2 = reducer(S1, { actionType: 'kill', viewType: 'view', viewId: 'A', simplify: true })
+    expect(activeId(S2.one as ITabs)).toBe('C')
+  })
+
+  it('shows the previous tab when the active tab is closed', () => {
+    const S1 = h(tabs(['A', 'B', 'C'], 2), 'Z')
+    const S2 = reducer(S1, { actionType: 'kill', viewType: 'view', viewId: 'C', simplify: true })
+    expect(activeId(S2.one as ITabs)).toBe('B')
+  })
+
+  it('shows the next tab when the first tab is closed while active', () => {
+    const S1 = h(tabs(['A', 'B', 'C'], 0), 'Z')
+    const S2 = reducer(S1, { actionType: 'kill', viewType: 'view', viewId: 'A', simplify: true })
+    expect(activeId(S2.one as ITabs)).toBe('B')
   })
 })

@@ -98,7 +98,7 @@ function addView(tabs: ITabs, view: IView | ITabs) {
     return {
       ...tabs,
       tabs: [...tabs.tabs, ...view.tabs],
-      active: tabs.tabs.length + (tabs.active || 0),
+      active: tabs.tabs.length + (view.active || 0),
     }
   return { ...tabs, tabs: [...tabs.tabs, view], active: tabs.tabs.length }
 }
@@ -145,9 +145,21 @@ export function simplify(s: IBox | ITabs | null | undefined): IBox | ITabs | nul
     case 'tabs': {
       if (s.dead) return null
       const tabs = s.tabs.filter(v => !v.dead)
-      return tabs.length ? { ...s, tabs } : null
+      if (!tabs.length) return null
+      return tabs.length === s.tabs.length ? s : { ...s, tabs, active: activeAfterRemoval(s, tabs) }
     }
   }
+}
+
+/**
+ * Index of the active tab once dead tabs are removed: the same view if it is still there,
+ * otherwise the tab before it, or the first tab.
+ */
+function activeAfterRemoval(s: ITabs, remaining: IView[]): number {
+  const active = s.tabs[s.active || 0]
+  if (active && !active.dead) return remaining.indexOf(active)
+  const remainingBefore = s.tabs.slice(0, s.active || 0).filter(v => !v.dead).length
+  return Math.max(0, remainingBefore - 1)
 }
 
 export function reducer(s: IBox | ITabs | null | undefined, action: DockAction): IBox {
@@ -185,13 +197,13 @@ function boxReducer(s: IBox, action: DockAction): IBox {
 function tabReducer(s: ITabs, action: DockAction): ITabs {
   if (action.actionType === 'kill') {
     if (action.viewType === 'tabs' && action.viewId === s.id) return { ...s, dead: true }
+    // the active tab is adjusted by simplify(), when dead tabs are removed
     const pos = s.tabs.findIndex(v => v.id === action.viewId)
     return pos === -1
       ? s
       : {
           ...s,
           tabs: [...s.tabs.slice(0, pos), { ...s.tabs[pos], dead: true }, ...s.tabs.slice(pos + 1)],
-          active: s.active && s.active >= pos ? s.active - 1 : s.active,
         }
   }
   if (action.actionType === 'tabs' && action.tabsId === s.id) {
