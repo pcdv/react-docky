@@ -32,10 +32,7 @@ export const DropZone: FC<DZProps> = ({ box, position, action, accept }) => {
       canDrop: (item /*, monitor*/) => {
         return accept ? accept(item as IView | ITabs, action) : true
       },
-      drop: item => {
-        console.log('drop on ' + boxId)
-        return dropAction(boxId, item as IView, action)
-      },
+      drop: item => dropAction(boxId, item as IView, action),
       collect: monitor => ({
         isOver: monitor.isOver(),
         canDrop: monitor.canDrop(),

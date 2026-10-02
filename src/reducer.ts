@@ -91,7 +91,7 @@ function rotate(box: IBox): IBox {
 
 function addView(tabs: ITabs, view: IView | ITabs) {
   if (!tabs || !tabs.tabs) {
-    console.log('Invalid action', tabs);
+    console.warn('Cannot add a view to', tabs)
     return tabs
   }
   if (view.type === 'tabs')
@@ -163,8 +163,6 @@ function activeAfterRemoval(s: ITabs, remaining: IView[]): number {
 }
 
 export function reducer(s: IBox | ITabs | null | undefined, action: DockAction): IBox {
-  console.log(action)
-
   if (action.actionType === 'box')
     s = reducer0(s, { actionType: 'kill', viewType: action.view.type, viewId: action.view.id })
 
