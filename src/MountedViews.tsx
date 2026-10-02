@@ -1,7 +1,8 @@
 import { useContext, useEffect, useLayoutEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { DockContext } from './Dock.js'
-import { IBox, ITabs, IView, ViewRenderer } from './types.js'
+import { collectViews } from './layout.js'
+import { IBox, IView, ViewRenderer } from './types.js'
 
 /**
  * With keepViewsMounted, each view is rendered once into an element of its own, which is moved
@@ -26,17 +27,6 @@ export class ViewElements {
   retain(ids: Set<string>) {
     for (const id of this.elements.keys()) if (!ids.has(id)) this.elements.delete(id)
   }
-}
-
-/** All the views of a layout, active or not */
-export function collectViews(item: IBox | ITabs | null | undefined, views: IView[] = []): IView[] {
-  if (item?.type === 'box') {
-    collectViews(item.one, views)
-    collectViews(item.two, views)
-  } else if (item?.type === 'tabs') {
-    views.push(...item.tabs.filter(v => !v.dead))
-  }
-  return views
 }
 
 /** Renders every view of the layout into its element */
