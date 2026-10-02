@@ -82,8 +82,10 @@ export const Uncontrolled = ({ initialState, render, onChange, renderFrame }: UP
   const [state, dispatch] = useReducer(dockReducer, initialState)
   const ref = useRef(state)
   useEffect(() => {
-    if (state !== initialState) onChange && onChange(ref.current)
-  }, [state])
+    if (state === ref.current) return
+    ref.current = state
+    onChange?.(state)
+  }, [state, onChange])
   return (
     <DockContext.Provider value={{ state: ref, render, dispatch, renderFrame }}>
       <Box box={state} />

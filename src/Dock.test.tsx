@@ -1,5 +1,6 @@
-import { getByRole } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { fireEvent, getByRole, render } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
+import { Dock } from './Dock.js'
 import { IBox } from './types.js'
 import { repr } from './util.js'
 import { dragAndDrop, dropZoneOver, frameOf, renderDock, tabs } from './test-utils.js'
@@ -42,5 +43,33 @@ describe('Dragging views', () => {
     )
 
     expect(repr(dock.layout())).toBe('h(x-c-a-b, null)')
+  })
+})
+
+describe('Uncontrolled dock', () => {
+  it('reports the new layout to onChange', () => {
+    vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (this: Element) {
+      const width = this.classList.contains('rd-split') ? 400 : 200
+      return { left: 0, top: 0, width, height: 300 } as DOMRect
+    })
+    const initialState: IBox = {
+      type: 'box',
+      id: 'B',
+      orientation: 'horizontal',
+      one: tabs('T1', ['a']),
+      two: tabs('T2', ['b']),
+    }
+    const onChange = vi.fn()
+    const { container } = render(
+      <Dock initialState={initialState} onChange={onChange} render={v => <div>{v.id}</div>} />
+    )
+
+    const resizer = container.querySelector('.Resizer')!
+    fireEvent.pointerDown(resizer, { button: 0, clientX: 200, pointerId: 1 })
+    fireEvent.pointerMove(resizer, { clientX: 250, pointerId: 1 })
+    fireEvent.pointerUp(resizer, { clientX: 250, pointerId: 1 })
+
+    expect(onChange).toHaveBeenCalledTimes(1)
+    expect(onChange.mock.calls[0][0]).toMatchObject({ id: 'B', size: 250 })
   })
 })
