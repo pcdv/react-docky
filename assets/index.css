@@ -8,7 +8,7 @@
 
 .dz-trigger {
   position: absolute;
-  z-index: 10;
+  z-index: 99999999;
   opacity: 0.4;
 }
 
@@ -52,6 +52,7 @@
 .drop-zone {
   position: absolute;
   background: grey;
+  z-index: 99999998;
   opacity: 0.9;
   border: solid 3px #222;
 }
@@ -114,10 +115,58 @@
   flex-grow: 1;
   display: flex;
   position: relative;
+  overflow: auto;
 }
 
 .view-wrapper > div {
   flex-grow: 1;
+  position: absolute;
+  max-width: 100%;
+  max-height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
+/* Two panes and a resizer, see Splitter.tsx (50px is MIN_PANE_SIZE) */
+.rd-split {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
 
+.rd-split.horizontal {
+  flex-direction: row;
+}
+
+.rd-split.vertical {
+  flex-direction: column;
+}
+
+.rd-split > .rd-pane {
+  position: relative;
+  display: flex;
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 0;
+}
+
+.rd-split > .rd-pane.first {
+  flex: none;
+}
+
+.rd-split.horizontal > .rd-pane.first {
+  width: clamp(50px, var(--rd-split-at), calc(100% - 50px));
+}
+
+.rd-split.vertical > .rd-pane.first {
+  height: clamp(50px, var(--rd-split-at), calc(100% - 50px));
+}
+
+.rd-split > .Resizer {
+  flex: none;
+  touch-action: none;
+  user-select: none;
+}

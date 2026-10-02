@@ -61,7 +61,8 @@ export type KillViewAction = {
 type ResizeAction = {
   actionType: 'resize'
   boxId: string
-  size: number
+  /** Size of the first child in pixels, undefined to split evenly */
+  size?: number
 }
 
 export type ActivateAction = {
@@ -126,7 +127,7 @@ const BOX_TRANSFORMS: Record<BoxTransformType, BoxTransform> = {
   o2: (b, v) => rotate({ ...b, one: { ...b, id: id() }, two: wrap(v) }),
 }
 
-const resize = (box: IBox, size: number) => ({ ...box, size })
+const resize = (box: IBox, size?: number) => ({ ...box, size })
 
 /**
  * Remove dead views, recursively clear empty containers.

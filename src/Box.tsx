@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
-import SplitPane from 'react-split-pane'
 import { DropZone } from './DropZone'
+import { Splitter } from './Splitter'
 import { ViewContainer } from './ViewContainer'
 import { IBox, ITabs } from './types'
 import { DockContext } from '.'
@@ -14,17 +14,17 @@ export const Box = ({ box }: BoxProps) => {
   const { dispatch, state } = useContext(DockContext)
   if (box.one && box.two)
     return (
-      <div key={box.id} className="" id={`box-${box.id}`}>
+      <div key={box.id} className="box" id={`box-${box.id}`}>
         <DropZone box={box} action="o1" position={horizontal ? 'top' : 'left'} />
         <DropZone box={box} action="o2" position={horizontal ? 'bottom' : 'right'} />
-        <SplitPane
-          split={horizontal ? 'vertical' : 'horizontal'}
-          size={box.size || '50%'}
-          onDragFinished={size => dispatch({ actionType: 'resize', boxId: box.id, size }, state.current)}
+        <Splitter
+          orientation={box.orientation}
+          size={box.size}
+          onResized={size => dispatch({ actionType: 'resize', boxId: box.id, size }, state.current)}
         >
           {renderAny(1, box.one, box)}
           {renderAny(2, box.two, box)}
-        </SplitPane>
+        </Splitter>
       </div>
     )
   return (
