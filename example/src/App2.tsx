@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { BoxTransformType, Dock, IBox, ITabs, IView, reducer, repr } from 'react-docky'
 import { sample2 as sample } from './samples'
 
-/** A view with some state, which it loses when it is moved to another parent */
+/** A view with some state, which it loses when it is moved to another parent, unless kept mounted */
 function CounterView({ view }: { view: IView }) {
   const [count, setCount] = useState(0)
   return (
@@ -45,6 +45,7 @@ function randomAction(): BoxTransformType {
  */
 export default function App() {
   const [states, setStates] = useState<IBox[]>([sample])
+  const [keepViewsMounted, setKeepViewsMounted] = useState(false)
   const layout = states[0]
 
   const onChange = (s: IBox) => setStates(previous => [s, ...previous])
@@ -66,11 +67,19 @@ export default function App() {
       <div id="actions">
         <button onClick={addRandomView}>Add random view</button>
         <button onClick={undo}>Undo</button>
+        <label>
+          <input
+            type="checkbox"
+            checked={keepViewsMounted}
+            onChange={e => setKeepViewsMounted(e.target.checked)}
+          />
+          Keep views mounted
+        </label>
         &nbsp; States: {states.length}
         &nbsp; {repr(layout)}
       </div>
       <div id="desktop">
-        <Dock state={layout} render={render} onChange={onChange} />
+        <Dock state={layout} render={render} onChange={onChange} keepViewsMounted={keepViewsMounted} />
       </div>
     </>
   )

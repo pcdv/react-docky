@@ -171,3 +171,18 @@
   touch-action: none;
   user-select: none;
 }
+
+/* With keepViewsMounted, the element of the view is moved into the slot where it is displayed */
+.rd-view-slot {
+  display: flex;
+}
+
+.rd-view {
+  display: contents;
+}
+
+.rd-view > * {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+}

@@ -13,10 +13,10 @@ export const tabs = (id: string, viewIds: string[], active?: number): ITabs => (
 })
 
 /**
- * Renders a controlled Dock, with the default skin unless `renderFrame` is given. Each view
- * renders as an element with the test id `view-<id>`.
+ * Renders a controlled Dock, with the default skin and each view as an element with the test id
+ * `view-<id>`, unless other props are given.
  */
-export function renderDock(initial: IBox, renderFrame?: DockProps['renderFrame']) {
+export function renderDock(initial: IBox, props: Partial<DockProps> = {}) {
   let layout = initial
   let setLayout: (layout: IBox) => void = () => {}
 
@@ -28,7 +28,7 @@ export function renderDock(initial: IBox, renderFrame?: DockProps['renderFrame']
         state={state}
         onChange={s => setState((layout = s))}
         render={v => <div data-testid={`view-${v.id}`} />}
-        renderFrame={renderFrame}
+        {...props}
       />
     )
   }
@@ -74,4 +74,4 @@ export const dropZoneOver = (
   getByTestId: (id: string) => HTMLElement,
   viewId: string,
   position: string
-) => getByTestId(`view-${viewId}`).parentElement!.querySelector(`.dz-trigger.${position}`)!
+) => getByTestId(`view-${viewId}`).closest('.view-wrapper')!.querySelector(`:scope > .dz-trigger.${position}`)!

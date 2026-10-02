@@ -59,7 +59,7 @@ describe('Dragging views', () => {
     }
     const dock = renderDock(
       { type: 'box', id: 'B', orientation: 'horizontal', one: tabs('T1', ['a', 'b']), two: tabs('T2', ['x']) },
-      VisibleFrame
+      { renderFrame: VisibleFrame }
     )
 
     dragAndDrop(frameOf(dock.getByTestId, 'a').querySelector('.rd-frame-header')!, () =>

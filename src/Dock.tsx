@@ -1,7 +1,8 @@
-import React, { createContext, useEffect, useRef, useReducer, MutableRefObject } from 'react'
+import React, { createContext, useEffect, useRef, useReducer, useState, MutableRefObject } from 'react'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { Box } from './Box.js'
+import { MountedViews, ViewElements } from './MountedViews.js'
 import { DockAction, reducer } from './reducer.js'
 import { FrameProps } from './skin/index.js'
 import { DefaultFrame } from './skin/Frame.js'
@@ -20,6 +21,8 @@ export interface DockCtx {
   render: ViewRenderer
   renderFrame: React.FC<FrameProps>
   dispatch: DockDispatch
+  /** Set when views are kept mounted */
+  viewElements?: ViewElements
 }
 
 const DEFAULT_CTX = { dispatch: () => {}, render: () => {}, state: {} } as unknown as DockCtx
@@ -31,6 +34,12 @@ export interface DockProps {
   render: ViewRenderer
   renderFrame?: React.FC<FrameProps>
   onChange?: (state: IBox) => void
+  /**
+   * Keep every view mounted, including when it is moved to another place and when its tab is
+   * not active, so that views keep their state. Each view is rendered in a portal: React events
+   * from a view propagate to the parents of the Dock, not to the frame around the view.
+   */
+  keepViewsMounted?: boolean
 }
 
 export const Dock = ({
@@ -39,6 +48,7 @@ export const Dock = ({
   render,
   onChange,
   renderFrame = DefaultFrame,
+  keepViewsMounted = false,
 }: DockProps) => {
   let child
 
@@ -49,11 +59,18 @@ export const Dock = ({
         render={render}
         onChange={onChange}
         renderFrame={renderFrame}
+        keepViewsMounted={keepViewsMounted}
       />
     )
   else if (state && onChange)
     child = (
-      <Controlled state={state} render={render} onChange={onChange} renderFrame={renderFrame} />
+      <Controlled
+        state={state}
+        render={render}
+        onChange={onChange}
+        renderFrame={renderFrame}
+        keepViewsMounted={keepViewsMounted}
+      />
     )
   else throw Error('Must supply either state + onChange or initialState')
 
@@ -69,6 +86,7 @@ interface UProps {
   render: ViewRenderer
   onChange?: (state: IBox) => void
   renderFrame: React.FC<FrameProps>
+  keepViewsMounted?: boolean
 }
 
 interface CProps {
@@ -76,9 +94,26 @@ interface CProps {
   render: ViewRenderer
   onChange: (state: IBox) => void
   renderFrame: React.FC<FrameProps>
+  keepViewsMounted?: boolean
 }
 
-export const Uncontrolled = ({ initialState, render, onChange, renderFrame }: UProps) => {
+/** Provides the context of a Dock, and renders its layout */
+const DockContent = ({
+  layout,
+  keepViewsMounted,
+  ...ctx
+}: Omit<DockCtx, 'viewElements'> & { layout: IBox; keepViewsMounted?: boolean }) => {
+  const [elements] = useState(() => new ViewElements())
+  const viewElements = keepViewsMounted ? elements : undefined
+  return (
+    <DockContext.Provider value={{ ...ctx, viewElements }}>
+      <Box box={layout} />
+      {viewElements && <MountedViews layout={layout} elements={viewElements} />}
+    </DockContext.Provider>
+  )
+}
+
+export const Uncontrolled = ({ initialState, onChange, ...props }: UProps) => {
   const [state, dispatch] = useReducer(dockReducer, initialState)
   const ref = useRef(state)
   useEffect(() => {
@@ -86,21 +121,14 @@ export const Uncontrolled = ({ initialState, render, onChange, renderFrame }: UP
     ref.current = state
     onChange?.(state)
   }, [state, onChange])
-  return (
-    <DockContext.Provider value={{ state: ref, render, dispatch, renderFrame }}>
-      <Box box={state} />
-    </DockContext.Provider>
-  )
+  return <DockContent {...props} layout={state} state={ref} dispatch={dispatch} />
 }
-export const Controlled = ({ state, render, onChange, renderFrame }: CProps) => {
+
+export const Controlled = ({ state, onChange, ...props }: CProps) => {
   const ref = useRef(state)
   useEffect(() => {
     ref.current = state
   }, [state])
   const dispatch = (action: DockAction) => onChange(reducer(ref.current, action))
-  return (
-    <DockContext.Provider value={{ state: ref, render, dispatch, renderFrame }}>
-      <Box box={state} />
-    </DockContext.Provider>
-  )
+  return <DockContent {...props} layout={state} state={ref} dispatch={dispatch} />
 }

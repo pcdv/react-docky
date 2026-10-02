@@ -20,8 +20,10 @@ Examples:
    (`FrameProps`, `useDragTab`, `useDragTabs`)
 
 ## Gotchas
- * When a view is moved to another parent, it loses its state (not sure whether this will
-   be fixed, in the meantime the solution is to store the state outside of the view)
+ * By default, a view is remounted, and loses its state, when it is moved to another parent or
+   when its tab is hidden. With `keepViewsMounted`, every view stays mounted and is moved
+   instead, but as it is rendered in a portal, the React events of a view propagate to the
+   parents of the Dock rather than to the frame around the view.
 
 ## Dependencies
  * react 18 or 19

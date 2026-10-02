@@ -1,6 +1,7 @@
 import { useContext } from 'react'
 import { DockContext } from './Dock.js'
 import { DropZone } from './DropZone.js'
+import { ViewSlot } from './MountedViews.js'
 import { BoxTransformType } from './reducer.js'
 import { Direction, IBox, ITabs, IView, Orientation } from './types.js'
 
@@ -15,6 +16,7 @@ interface ViewWrapperProps {
  * Renders a view with drop zones over it.
  */
 export const ViewWrapper = ({ view, box, acceptDrop, rank }: ViewWrapperProps) => {
+  const { render, viewElements } = useContext(DockContext)
   return (
     <div key={view.id} className="view-wrapper">
       {DIR.map((position, index) => (
@@ -26,7 +28,7 @@ export const ViewWrapper = ({ view, box, acceptDrop, rank }: ViewWrapperProps) =
           action={transform(index, rank, box.orientation)}
         />
       ))}
-      {useContext(DockContext).render(view)}
+      {viewElements ? <ViewSlot view={view} elements={viewElements} /> : render(view)}
     </div>
   )
 }
