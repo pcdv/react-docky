@@ -14,19 +14,19 @@ Examples:
 
 ## Features
  * Unlimited nesting of views
- * Resizable views
+ * Resizable views (double-click a resizer to split evenly)
  * Tabbed views (drag all views or single tab)
- * Customizable look and feel
+ * Customizable look and feel: give `renderFrame` your own component, built with the skin API
+   (`FrameProps`, `useDragTab`, `useDragTabs`)
 
 ## Gotchas
  * When a view is moved to another parent, it loses its state (not sure whether this will
    be fixed, in the meantime the solution is to store the state outside of the view)
- * The application must be wrapped in a DndProvider (from react-dnd)
 
 ## Dependencies
- * react
- * react-dnd (and the backend of your choice)
- * react-split-pane
+ * react 18 or 19
+ * react-dnd 16 and react-dnd-html5-backend: the Dock provides a DndProvider with the HTML5
+   backend, unless the application already has one
 
 ## Todo
  * More tests and examples
@@ -38,33 +38,31 @@ Maybe later
 ## How to install
 
 ```
-npm install react-docky
-npm install react-dnd
-npm install react-dnd-html5-backend
+npm install react-docky react-dnd react-dnd-html5-backend
+```
+
+And import the styles:
+
+```ts
+import 'react-docky/assets/index.css' // layout and drop zones
+import 'react-docky/assets/skin.css' // default look and feel
+import 'react-docky/assets/react-splitpane.css' // resizers
 ```
 
 ## How to build / test
 
-```
-rm -rf lib
-npm install
-npm run build
-```
-
-To test changes in an example app
-```
-# in one terminal
-npm run watch
-
-# in another terminal
-cd example
-npm install
-npm run dev
-```
-
-To run tests
 ```sh
-npm test
+npm install
+npm run build      # the library, in lib/
+npm test           # or npm run test:watch
+npm run lint
+npm run typecheck  # the library, its tests and the examples
+```
+
+To try changes in the [example app](example), which uses the sources of the library directly:
+
+```sh
+npm run dev
 ```
 
 ## Alternatives

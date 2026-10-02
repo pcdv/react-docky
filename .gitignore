@@ -23,13 +23,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-example/node_modules
 *.tgz
 
-/example/*lock*
-/example-vite/*lock*
-
-# yarn is buggy with npm link so I use npm to install dependencies
+# npm is used, see package-lock.json
 yarn.lock
-
 pnpm-lock.yaml
