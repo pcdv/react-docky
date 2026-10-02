@@ -12,6 +12,12 @@
 /build
 /lib
 
+# IDE
+.idea
+*.iml
+*.ipr
+*.iws
+
 # misc
 .DS_Store
 .env.local

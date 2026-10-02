@@ -15,7 +15,10 @@
     "*.css"
   ],
   "license": "MIT",
-  "repository": "github:pcdv/react-docky",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pcdv/react-docky.git"
+  },
   "scripts": {
     "build": "node -e \"fs.rmSync('lib', { recursive: true, force: true })\" && tsc -p tsconfig.build.json",
     "watch": "tsc -p tsconfig.build.json -w",
