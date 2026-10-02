@@ -15,7 +15,7 @@ export type DockDispatch = (action: DockAction, oldState: IBox) => void
  */
 const dockReducer = (state: IBox, action: DockAction): IBox => reducer(state, action)
 
-interface DockCtx {
+export interface DockCtx {
   state: MutableRefObject<IBox>
   render: ViewRenderer
   renderFrame: React.FC<FrameProps>

@@ -49,11 +49,11 @@ export interface TabProps {
 }
 
 /**
- * Must be passed as ref to the component which should be dragged to move a view.
+ * Hook returning the ref to pass to the component which should be dragged to move a view.
  */
-export function dragTab<T extends HTMLElement = HTMLElement>(view: IView): RefCallback<T> {
+export function useDragTab<T extends HTMLElement = HTMLElement>(view: IView): RefCallback<T> {
   const { dispatch, state } = useContext(DockContext)
-  const [{}, drag] = useDrag(
+  const [, drag] = useDrag(
     () => ({
       type: 'VIEW',
       item: () => view,
@@ -69,6 +69,9 @@ export function dragTab<T extends HTMLElement = HTMLElement>(view: IView): RefCa
 
   return useDndRef<T>(drag)
 }
+
+/** @deprecated Renamed to useDragTab, as it is a hook */
+export const dragTab = useDragTab
 
 /**
  * Hook to make a tabbed view draggable. Usage:
