@@ -14,7 +14,8 @@ Examples:
 
 ## Features
  * Unlimited nesting of views
- * Resizable views (double-click a resizer to split evenly)
+ * Resizable views (double-click a resizer to split evenly). The `Splitter` component used for
+   that is exported, and can split any content in two, with a size in any CSS unit
  * Tabbed views (drag all views or single tab)
  * Customizable look and feel: give `renderFrame` your own component, built with the skin API
    (`FrameProps`, `useDragTab`, `useDragTabs`)

@@ -59,3 +59,68 @@ describe('Splitter', () => {
     expect(onResized).not.toHaveBeenCalled()
   })
 })
+
+describe('Uncontrolled splitter', () => {
+  /** A horizontal splitter 400px wide, whose first pane is 100px wide */
+  function renderUncontrolled(defaultSize: string | number) {
+    vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (
+      this: Element
+    ) {
+      const width = this.classList.contains('rd-split') ? 400 : 100
+      return { left: 0, top: 0, width, height: 300 } as DOMRect
+    })
+    const { container } = render(
+      <Splitter orientation="horizontal" defaultSize={defaultSize}>
+        <div />
+        <div />
+      </Splitter>
+    )
+    const split = container.querySelector<HTMLElement>('.rd-split')!
+    return {
+      split,
+      resizer: container.querySelector('.Resizer')!,
+      at: () => split.style.getPropertyValue('--rd-split-at'),
+    }
+  }
+
+  it('starts at the default size, in any CSS length', () => {
+    expect(renderUncontrolled('25%').at()).toBe('25%')
+  })
+
+  it('keeps a size in percent if the default size is one', () => {
+    const { resizer, at } = renderUncontrolled('25%')
+    fireEvent.pointerDown(resizer, { button: 0, clientX: 100, pointerId: 1 })
+    fireEvent.pointerUp(resizer, { clientX: 160, pointerId: 1 })
+    expect(at()).toBe('40%')
+
+    fireEvent.doubleClick(resizer)
+    expect(at()).toBe('25%')
+  })
+
+  it('keeps a size in pixels otherwise', () => {
+    const { resizer, at } = renderUncontrolled(100)
+    fireEvent.pointerDown(resizer, { button: 0, clientX: 100, pointerId: 1 })
+    fireEvent.pointerUp(resizer, { clientX: 160, pointerId: 1 })
+    expect(at()).toBe('160px')
+  })
+})
+
+describe('Controlled splitter', () => {
+  it('shows the size it is given', () => {
+    const { container, rerender } = render(
+      <Splitter orientation="vertical" size={120} onResized={() => {}}>
+        <div />
+        <div />
+      </Splitter>
+    )
+    const split = container.querySelector<HTMLElement>('.rd-split')!
+    expect(split.style.getPropertyValue('--rd-split-at')).toBe('120px')
+    rerender(
+      <Splitter orientation="vertical" size="30%" onResized={() => {}}>
+        <div />
+        <div />
+      </Splitter>
+    )
+    expect(split.style.getPropertyValue('--rd-split-at')).toBe('30%')
+  })
+})

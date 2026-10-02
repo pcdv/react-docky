@@ -1,5 +1,6 @@
 export * from './Dock.js'
 export * from './Box.js'
+export * from './Splitter.js'
 export * from './reducer.js'
 export * from './layout.js'
 export * from './util.js'

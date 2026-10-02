@@ -19,7 +19,7 @@ export const Box = ({ box }: BoxProps) => {
         <DropZone box={box} action="o2" position={horizontal ? 'bottom' : 'right'} />
         <Splitter
           orientation={box.orientation}
-          size={box.size}
+          size={box.size ?? '50%'}
           onResized={size => dispatch({ actionType: 'resize', boxId: box.id, size }, state.current)}
         >
           {renderAny(1, box.one, box)}
