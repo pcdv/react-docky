@@ -1,26 +1,24 @@
-import { useCallback, useRef, useState } from 'react'
+import { useState } from 'react'
+import { BoxTransformType, Dock, IBox, ITabs, IView, reducer, repr } from 'react-docky'
 import { sample2 as sample } from './samples'
-import { Dock, repr, IView, IBox, ITabs, BoxTransformType, reducer } from 'react-docky'
-import './App.css'
 
-function render(view: IView) {
-  const [ count, setCount ] = useState(0)
+/** A view with some state, which it loses when it is moved to another parent */
+function CounterView({ view }: { view: IView }) {
+  const [count, setCount] = useState(0)
   return (
-    <div key={view.id} style={{ background: view.id, color: 'white', opacity: 0.8, padding: '5px' }}>
-      {view.dead && 'DEAD'}
-      <button onClick={() => setCount(count + 1)}>Increment</button>
-      { count }
+    <div style={{ background: view.id, color: 'white', opacity: 0.8, padding: '5px' }}>
+      <button onClick={() => setCount(count + 1)}>Increment</button> {count}
     </div>
   )
 }
 
-function collectBoxIds(s?: IBox | ITabs, arr: string[] = []) {
-  if (s) {
-    if (s.type === 'box') {
-      arr.push(s.id)
-      collectBoxIds(s.one, arr)
-      collectBoxIds(s.two, arr)
-    }
+const render = (view: IView) => <CounterView view={view} />
+
+function collectBoxIds(s: IBox | ITabs | null | undefined, arr: string[] = []) {
+  if (s?.type === 'box') {
+    arr.push(s.id)
+    collectBoxIds(s.one, arr)
+    collectBoxIds(s.two, arr)
   }
   return arr
 }
@@ -31,7 +29,7 @@ function randomBoxId(s: IBox) {
 }
 
 function randomView(): IView {
-  const id = '#' + (((1 << 24) * Math.random()) | 0).toString(16)
+  const id = '#' + (((1 << 24) * Math.random()) | 0).toString(16).padStart(6, '0')
   return { id, type: 'view', viewType: 'random' }
 }
 
@@ -42,55 +40,38 @@ function randomAction(): BoxTransformType {
 }
 
 /**
- * This version of the app store state history in an array so we can undo the last change.
+ * The application keeps the layout, here with its history so that the last change can be undone.
+ * The layout can also be changed from outside of the Dock, with the same reducer.
  */
-function App() {
-  const [states, setStates] = useState<IBox[]>(() => [sample])
+export default function App() {
+  const [states, setStates] = useState<IBox[]>([sample])
+  const layout = states[0]
 
-  // gotta use a ref, otherwise looks like onChange captures some old array and
-  // causes jumps in time
-  const ref = useRef(states)
+  const onChange = (s: IBox) => setStates(previous => [s, ...previous])
 
-  const onChange = useCallback(
-    (s: IBox) => {
-      const newStates = [s].concat(ref.current)
-      setStates(newStates)
-      ref.current = newStates
-    },
-    [states]
-  )
+  const undo = () => setStates(previous => (previous.length > 1 ? previous.slice(1) : previous))
 
-  const undo = useCallback(() => {
-    const newStates = states.slice(1)
-    setStates(newStates)
-    ref.current = newStates
-  }, [states])
-
-  const addRandomView = useCallback(() => {
-    const s = reducer(states[0], {
-      actionType: 'box',
-      boxId: randomBoxId(states[0]),
-      type: randomAction(),
-      view: randomView(),
-    })
-    onChange(s)
-  }, [states])
-
-  const box = states[0] || sample
+  const addRandomView = () =>
+    onChange(
+      reducer(layout, {
+        actionType: 'box',
+        boxId: randomBoxId(layout),
+        type: randomAction(),
+        view: randomView(),
+      })
+    )
 
   return (
-    <div>
+    <>
       <div id="actions">
         <button onClick={addRandomView}>Add random view</button>
         <button onClick={undo}>Undo</button>
         &nbsp; States: {states.length}
-        &nbsp; {repr(box)}
+        &nbsp; {repr(layout)}
       </div>
       <div id="desktop">
-        <Dock key={box.id} state={box} render={render} onChange={onChange} />
+        <Dock state={layout} render={render} onChange={onChange} />
       </div>
-    </div>
+    </>
   )
 }
-
-export default App
