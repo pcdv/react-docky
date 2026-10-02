@@ -1,5 +1,5 @@
-import React, { CSSProperties, PointerEvent, ReactNode, useRef, useState } from 'react'
-import { Orientation } from './types'
+import { CSSProperties, PointerEvent, ReactNode, useRef, useState } from 'react'
+import { Orientation } from './types.js'
 
 /** Smallest size of a pane, in pixels. Keep in sync with assets/index.css. */
 export const MIN_PANE_SIZE = 50

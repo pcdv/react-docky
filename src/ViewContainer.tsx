@@ -1,9 +1,9 @@
-import React, { useCallback, useContext } from 'react'
-import { BoxAction, DockContext, IView } from '.'
-import { activate, closeAll, closeView } from './actions'
-import { BoxTransformType } from './reducer'
-import { IBox, ITabs } from './types'
-import { ViewWrapper } from './ViewWrapper'
+import { useCallback, useContext } from 'react'
+import { DockContext } from './Dock.js'
+import { activate, closeAll, closeView } from './actions.js'
+import { BoxAction, BoxTransformType } from './reducer.js'
+import { IBox, ITabs, IView } from './types.js'
+import { ViewWrapper } from './ViewWrapper.js'
 
 interface ViewContainerProps {
   parent: IBox

@@ -1,11 +1,19 @@
 import React, { createContext, useEffect, useRef, useReducer, MutableRefObject } from 'react'
-import { Box } from './Box'
-import { DockAction, reducer } from './reducer'
-import { FrameProps } from './skin'
-import { DefaultFrame } from './skin/Frame'
-import { IBox, ViewRenderer } from './types'
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
+import { Box } from './Box.js'
+import { DockAction, reducer } from './reducer.js'
+import { FrameProps } from './skin/index.js'
+import { DefaultFrame } from './skin/Frame.js'
+import { IBox, ViewRenderer } from './types.js'
 
 export type DockDispatch = (action: DockAction, oldState: IBox) => void
+
+/**
+ * `reducer` accepts a wider state than a mounted Dock ever holds, so useReducer would
+ * infer that wider type. Inside a Dock the state is always an IBox.
+ */
+const dockReducer = (state: IBox, action: DockAction): IBox => reducer(state, action)
 
 interface DockCtx {
   state: MutableRefObject<IBox>
@@ -32,8 +40,10 @@ export const Dock = ({
   onChange,
   renderFrame = DefaultFrame,
 }: DockProps) => {
+  let child
+
   if (initialState)
-    return (
+    child = (
       <Uncontrolled
         initialState={initialState}
         render={render}
@@ -42,10 +52,16 @@ export const Dock = ({
       />
     )
   else if (state && onChange)
-    return (
+    child = (
       <Controlled state={state} render={render} onChange={onChange} renderFrame={renderFrame} />
     )
   else throw Error('Must supply either state + onChange or initialState')
+
+  return (
+    <DndProvider backend={HTML5Backend}>
+      {child}
+    </DndProvider>
+  )
 }
 
 interface UProps {
@@ -63,7 +79,7 @@ interface CProps {
 }
 
 export const Uncontrolled = ({ initialState, render, onChange, renderFrame }: UProps) => {
-  const [state, dispatch] = useReducer(reducer, initialState)
+  const [state, dispatch] = useReducer(dockReducer, initialState)
   const ref = useRef(state)
   useEffect(() => {
     if (state !== initialState) onChange && onChange(ref.current)

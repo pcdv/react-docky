@@ -1,4 +1,4 @@
-import { IBox, ITabs, IView } from './types'
+import { IBox, ITabs, IView } from './types.js'
 
 // hack to avoid ID collision with samples (need a better way)
 let counter = 1000
@@ -18,6 +18,6 @@ export function repr(x: IBox | ITabs | IView | null | undefined): string {
       if (x.dead) return '$' + x.id
       return x.id
     default:
-      return (x as any)?.type + '???'
+      return (x as { type?: string })?.type + '???'
   }
 }

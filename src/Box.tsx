@@ -1,9 +1,9 @@
-import React, { useContext } from 'react'
-import { DropZone } from './DropZone'
-import { Splitter } from './Splitter'
-import { ViewContainer } from './ViewContainer'
-import { IBox, ITabs } from './types'
-import { DockContext } from '.'
+import { ReactNode, useContext } from 'react'
+import { DropZone } from './DropZone.js'
+import { Splitter } from './Splitter.js'
+import { ViewContainer } from './ViewContainer.js'
+import { IBox, ITabs } from './types.js'
+import { DockContext } from './Dock.js'
 
 interface BoxProps {
   box: IBox
@@ -35,7 +35,7 @@ export const Box = ({ box }: BoxProps) => {
   )
 }
 
-function renderAny(rank: 1 | 2, item: IBox | ITabs, parent: IBox): React.ReactNode {
+function renderAny(rank: 1 | 2, item: IBox | ITabs, parent: IBox): ReactNode {
   switch (item.type) {
     case 'box':
       return <Box key={item.id} box={item} />

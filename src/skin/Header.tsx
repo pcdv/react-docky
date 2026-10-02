@@ -1,5 +1,4 @@
-import React from 'react'
-import { HeaderProps } from '.'
+import { HeaderProps } from './index.js'
 
 export const Header = ({ view, dragTabsRef: drag, onClose }: HeaderProps) => {
   return (

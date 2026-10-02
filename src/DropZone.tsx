@@ -1,9 +1,8 @@
-import React from 'react'
 import { FC } from 'react'
 import { useDrop } from 'react-dnd'
-import { ITabs } from '.'
-import { BoxAction, BoxTransformType } from './reducer'
-import { Direction, IBox, IView } from './types'
+import { useDndRef } from './dndRef.js'
+import { BoxAction, BoxTransformType } from './reducer.js'
+import { Direction, IBox, ITabs, IView } from './types.js'
 
 /**
  * Action generated when a view is dropped on a drop zone.
@@ -39,12 +38,14 @@ export const DropZone: FC<DZProps> = ({ box, position, action, accept }) => {
       isVisible: !!monitor.getItem(),
     }),
   }))
+  const dropRef = useDndRef<HTMLDivElement>(drop)
+
   const isActive = canDrop && isOver
   if (!isVisible) return null
   const key = `${box.id}-${action}`
   return (
     <>
-      <div ref={drop} key={key} className={`dz-trigger ${position} `} title={key} />
+      <div ref={dropRef} key={key} className={`dz-trigger ${position} `} title={key} />
       {isActive && <div className={`drop-zone ${position}`} />}
     </>
   )

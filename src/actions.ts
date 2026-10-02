@@ -1,4 +1,5 @@
-import { ActivateAction, ITabs, IView, KillViewAction } from '.'
+import { ActivateAction, KillViewAction } from './reducer.js'
+import { ITabs, IView } from './types.js'
 
 export function activate(tabs: ITabs, index: number): ActivateAction {
   return {

@@ -1,7 +1,0 @@
-src
-example
-example-vite
-*test*
-*.tgz
-.*
-tsconfig.*

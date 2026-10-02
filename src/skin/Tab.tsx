@@ -1,5 +1,4 @@
-import React from 'react'
-import { dragTab, TabProps } from '.'
+import { dragTab, TabProps } from './index.js'
 
 /**
  * View tab/button. Click to activate corresponding view, drag to move view elsewhere.

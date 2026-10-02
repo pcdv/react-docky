@@ -1,8 +1,9 @@
-import { ReactElement, useContext } from 'react'
-import { ConnectDragSource, useDrag } from 'react-dnd'
-import { DockContext, ITabs } from '..'
-import { BoxAction } from '../reducer'
-import { IView } from '../types'
+import { ReactElement, RefCallback, useContext } from 'react'
+import { useDrag } from 'react-dnd'
+import { DockContext } from '../Dock.js'
+import { useDndRef } from '../dndRef.js'
+import { BoxAction } from '../reducer.js'
+import { ITabs, IView } from '../types.js'
 
 /**
  * If you want to provide your own look and feel, you must provide a render prop that
@@ -29,14 +30,14 @@ export interface FrameProps {
 
 export interface HeaderProps {
   view: IView
-  dragTabsRef: ConnectDragSource
+  dragTabsRef: RefCallback<HTMLElement>
   onClose: () => void
 }
 
 export interface FooterProps {
   tabs: ITabs
   active: number
-  dragTabsRef: ConnectDragSource
+  dragTabsRef: RefCallback<HTMLElement>
   onActivate: (i: number) => void
 }
 
@@ -50,7 +51,7 @@ export interface TabProps {
 /**
  * Must be passed as ref to the component which should be dragged to move a view.
  */
-export function dragTab(view: IView): ConnectDragSource {
+export function dragTab<T extends HTMLElement = HTMLElement>(view: IView): RefCallback<T> {
   const { dispatch, state } = useContext(DockContext)
   const [{}, drag] = useDrag(
     () => ({
@@ -66,7 +67,7 @@ export function dragTab(view: IView): ConnectDragSource {
     []
   )
 
-  return drag
+  return useDndRef<T>(drag)
 }
 
 /**
@@ -74,8 +75,11 @@ export function dragTab(view: IView): ConnectDragSource {
  *     const [{ isTabsDragging }, drag] = useDragTabs(tabs, onDrop)
  *     return <div ref={drag} className="my-tabbed-view">...</div>
  */
-export function useDragTabs(tabs: ITabs, onDrop: (action: BoxAction) => void) {
-  return useDrag(
+export function useDragTabs<T extends HTMLElement = HTMLElement>(
+  tabs: ITabs,
+  onDrop: (action: BoxAction) => void
+) {
+  const [collected, drag, preview] = useDrag(
     () => ({
       type: 'TABS',
       item: () => tabs,
@@ -88,4 +92,6 @@ export function useDragTabs(tabs: ITabs, onDrop: (action: BoxAction) => void) {
     }),
     []
   )
+
+  return [collected, useDndRef<T>(drag), preview] as const
 }

@@ -1,7 +1,7 @@
-import React, { CSSProperties } from 'react'
-import { FrameProps, useDragTabs } from '.'
-import { Footer } from './Footer'
-import { Header } from './Header'
+import { CSSProperties } from 'react'
+import { FrameProps, useDragTabs } from './index.js'
+import { Footer } from './Footer.js'
+import { Header } from './Header.js'
 
 const INVISIBLE: CSSProperties = { display: 'none' }
 

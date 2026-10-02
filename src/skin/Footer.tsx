@@ -1,6 +1,5 @@
-import React from 'react'
-import { FooterProps } from '.'
-import { Tab } from './Tab'
+import { FooterProps } from './index.js'
+import { Tab } from './Tab.js'
 
 export const Footer = ({ tabs, active, onActivate, dragTabsRef }: FooterProps) => {
   if (!tabs.tabs.length) return null

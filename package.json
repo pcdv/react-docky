@@ -2,44 +2,51 @@
   "name": "react-docky",
   "version": "0.1.0",
   "description": "Simple docking layout for React",
-  "main": "./lib/cjs/index.js",
+  "type": "module",
+  "main": "./lib/esm/index.js",
   "module": "./lib/esm/index.js",
   "types": "./lib/esm/index.d.ts",
   "style": "./assets/index.css",
+  "files": [
+    "lib",
+    "assets"
+  ],
+  "sideEffects": [
+    "*.css"
+  ],
   "license": "MIT",
-  "devDependencies": {
-    "@babel/preset-env": "^7.16.4",
-    "@babel/preset-react": "^7.16.0",
-    "@babel/preset-typescript": "^7.16.0",
-    "@types/hoist-non-react-statics": "^3.3.1",
-    "@types/jest": "^27.0.3",
-    "@types/react": "^17.0.35",
-    "@types/react-dom": "^17.0.11",
-    "jest": "^27.3.1",
-    "typescript": "^4.5.2"
+  "repository": "github:pcdv/react-docky",
+  "scripts": {
+    "build": "node -e \"fs.rmSync('lib', { recursive: true, force: true })\" && tsc -p tsconfig.build.json",
+    "watch": "tsc -p tsconfig.build.json -w",
+    "typecheck": "tsc",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepack": "npm run build"
   },
   "peerDependencies": {
-    "react": "^17.0.2",
-    "react-dnd": "^14.0.4",
-    "react-dnd-html5-backend": "^14.0.2",
-    "react-dom": "^17.0.2"
+    "react": "^18 || ^19",
+    "react-dnd": "^16",
+    "react-dnd-html5-backend": "^16",
+    "react-dom": "^18 || ^19"
   },
-  "scripts": {
-    "build": "yarn build:esm && yarn build:cjs",
-    "build:esm": "tsc",
-    "watch": "tsc -w",
-    "build:cjs": "tsc --module commonjs --outDir lib/cjs",
-    "test": "jest --watch"
-  },
-  "dependencies": {
-    "@types/react-dnd": "^3.0.2",
-    "@types/react-dnd-html5-backend": "^3.0.2",
-    "react": "^17.0.2"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/react": "^16.3.3",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "eslint": "^10.11.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.13.0",
+    "jsdom": "^29.1.1",
+    "react": "^19.3.0",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
+    "react-dom": "^19.3.0",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.71.0",
+    "vitest": "^5.0.3"
   }
 }

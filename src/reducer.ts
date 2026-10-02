@@ -27,8 +27,8 @@ h(U, V) ^ x2(W) = h(U, v(W, V))
 h(U, V) ^ y2(W) = h(U, v(V, W))
 
 */
-import { IBox, ITabs, IView } from './types'
-import { genId } from './util'
+import { IBox, ITabs, IView } from './types.js'
+import { genId } from './util.js'
 
 export type BoxTransformType =
   | 'i1'
@@ -136,15 +136,17 @@ export function simplify(s: IBox | ITabs | null | undefined): IBox | ITabs | nul
   if (!s) return null
 
   switch (s.type) {
-    case 'box':
+    case 'box': {
       const one = simplify(s.one)
       const two = simplify(s.two)
       return one && two ? { ...s, one: one, two: two } : one ? one : two ? two : null
+    }
 
-    case 'tabs':
+    case 'tabs': {
       if (s.dead) return null
       const tabs = s.tabs.filter(v => !v.dead)
       return tabs.length ? { ...s, tabs } : null
+    }
   }
 }
 

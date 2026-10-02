@@ -1,8 +1,8 @@
-import React, { useContext } from 'react'
-import { DockContext, IView } from '.'
-import { DropZone } from './DropZone'
-import { BoxTransformType } from './reducer'
-import { Direction, IBox, ITabs, Orientation } from './types'
+import { useContext } from 'react'
+import { DockContext } from './Dock.js'
+import { DropZone } from './DropZone.js'
+import { BoxTransformType } from './reducer.js'
+import { Direction, IBox, ITabs, IView, Orientation } from './types.js'
 
 interface ViewWrapperProps {
   view: IView
