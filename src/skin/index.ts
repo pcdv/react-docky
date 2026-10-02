@@ -64,7 +64,7 @@ export function dragTab<T extends HTMLElement = HTMLElement>(view: IView): RefCa
         }
       },
     }),
-    []
+    [view, dispatch, state]
   )
 
   return useDndRef<T>(drag)
@@ -90,7 +90,7 @@ export function useDragTabs<T extends HTMLElement = HTMLElement>(
         }
       },
     }),
-    []
+    [tabs, onDrop]
   )
 
   return [collected, useDndRef<T>(drag), preview] as const

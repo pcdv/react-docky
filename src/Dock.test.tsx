@@ -24,4 +24,23 @@ describe('Dragging views', () => {
 
     expect(repr(dock.layout())).toBe('v(t1, h(w, t2))')
   })
+
+  it('drags a tab group with its current tabs', () => {
+    const dock = renderDock({
+      type: 'box',
+      id: 'B',
+      orientation: 'horizontal',
+      one: tabs('T1', ['a', 'b', 'c'], 0),
+      two: tabs('T2', ['x']),
+    })
+
+    // c moves to T2, while T1 stays mounted as its active tab does not change
+    dock.setLayout({ ...dock.layout(), one: tabs('T1', ['a', 'b'], 0), two: tabs('T2', ['x', 'c'], 1) })
+
+    dragAndDrop(frameOf(dock.getByTestId, 'a').querySelector('.rd-frame-header')!, () =>
+      dropZoneOver(dock.getByTestId, 'c', 'over')
+    )
+
+    expect(repr(dock.layout())).toBe('h(x-c-a-b, null)')
+  })
 })
