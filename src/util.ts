@@ -1,9 +1,10 @@
 import { IBox, ITabs, IView } from './types.js'
 
-// hack to avoid ID collision with samples (need a better way)
-let counter = 1000
+// Unique to this page load, so that new ids never collide with the ids of a layout saved earlier
+const session = Date.now().toString(36) + Math.random().toString(36).slice(2, 6)
+let counter = 0
 export function genId(prefix: string): string {
-  return prefix + counter++
+  return `${prefix}-${session}-${counter++}`
 }
 
 export function repr(x: IBox | ITabs | IView | null | undefined): string {
