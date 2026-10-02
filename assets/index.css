@@ -118,7 +118,8 @@
   overflow: auto;
 }
 
-.view-wrapper > div {
+/* The view itself, not the drop zones over it */
+.view-wrapper > div:not(.dz-trigger, .drop-zone) {
   flex-grow: 1;
   position: absolute;
   max-width: 100%;
