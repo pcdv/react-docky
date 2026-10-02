@@ -23,21 +23,27 @@ interface DZProps {
 }
 
 export const DropZone: FC<DZProps> = ({ box, position, action, accept }) => {
-  const [{ canDrop, isOver, isVisible }, drop] = useDrop(() => ({
-    accept: ['VIEW', 'TABS'],
-    canDrop: (item /*, monitor*/) => {
-      return accept ? accept(item as IView | ITabs, action) : true
-    },
-    drop: item => {
-      console.log('drop on ' + box.id)
-      return dropAction(box.id, item as IView, action)
-    },
-    collect: monitor => ({
-      isOver: monitor.isOver(),
-      canDrop: monitor.canDrop(),
-      isVisible: !!monitor.getItem(),
+  // The action depends on the orientation of the box, which can change while this zone stays
+  // mounted: without dependencies, react-dnd would keep the spec of the first render.
+  const boxId = box.id
+  const [{ canDrop, isOver, isVisible }, drop] = useDrop(
+    () => ({
+      accept: ['VIEW', 'TABS'],
+      canDrop: (item /*, monitor*/) => {
+        return accept ? accept(item as IView | ITabs, action) : true
+      },
+      drop: item => {
+        console.log('drop on ' + boxId)
+        return dropAction(boxId, item as IView, action)
+      },
+      collect: monitor => ({
+        isOver: monitor.isOver(),
+        canDrop: monitor.canDrop(),
+        isVisible: !!monitor.getItem(),
+      }),
     }),
-  }))
+    [boxId, action, accept]
+  )
   const dropRef = useDndRef<HTMLDivElement>(drop)
 
   const isActive = canDrop && isOver
