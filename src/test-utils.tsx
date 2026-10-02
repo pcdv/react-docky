@@ -1,6 +1,6 @@
 import { act, fireEvent, render } from '@testing-library/react'
 import { useState } from 'react'
-import { Dock } from './Dock.js'
+import { Dock, DockProps } from './Dock.js'
 import { IBox, ITabs, IView } from './types.js'
 
 export const view = (id: string): IView => ({ type: 'view', id, viewType: 'test' })
@@ -13,10 +13,10 @@ export const tabs = (id: string, viewIds: string[], active?: number): ITabs => (
 })
 
 /**
- * Renders a controlled Dock with the default skin. Each view renders as an element with the
- * test id `view-<id>`.
+ * Renders a controlled Dock, with the default skin unless `renderFrame` is given. Each view
+ * renders as an element with the test id `view-<id>`.
  */
-export function renderDock(initial: IBox) {
+export function renderDock(initial: IBox, renderFrame?: DockProps['renderFrame']) {
   let layout = initial
   let setLayout: (layout: IBox) => void = () => {}
 
@@ -28,6 +28,7 @@ export function renderDock(initial: IBox) {
         state={state}
         onChange={s => setState((layout = s))}
         render={v => <div data-testid={`view-${v.id}`} />}
+        renderFrame={renderFrame}
       />
     )
   }
@@ -64,7 +65,7 @@ export function dragAndDrop(source: Element, target: () => Element) {
   fireEvent.dragEnd(source, { dataTransfer })
 }
 
-/** The frame (default skin) that contains the active view `viewId` */
+/** The frame (default skin, or with the same class) that contains the active view `viewId` */
 export const frameOf = (getByTestId: (id: string) => HTMLElement, viewId: string) =>
   getByTestId(`view-${viewId}`).closest('.views-container')!
 

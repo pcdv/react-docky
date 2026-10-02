@@ -21,6 +21,8 @@ export const ViewContainer = ({ parent, rank, tabs }: ViewContainerProps) => {
 
   const acceptDrop = useCallback(
     (v: IView | ITabs, action: BoxTransformType) => {
+      // adding a group to itself would kill it
+      if (v.type === 'tabs') return !(action[0] === 'd' && v.id === tabs.id)
       if (v.id !== view?.id) return true
       if (action[0] === 'd' && tabs.tabs.find(x => x.id === v.id)) return false
       return true

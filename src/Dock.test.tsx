@@ -1,6 +1,7 @@
 import { fireEvent, getByRole, render } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { Dock } from './Dock.js'
+import { FrameProps, useDragTabs } from './skin/index.js'
 import { IBox } from './types.js'
 import { repr } from './util.js'
 import { dragAndDrop, dropZoneOver, frameOf, renderDock, tabs } from './test-utils.js'
@@ -43,6 +44,29 @@ describe('Dragging views', () => {
     )
 
     expect(repr(dock.layout())).toBe('h(x-c-a-b, null)')
+  })
+
+  it('does not drop a tab group on itself', () => {
+    // Unlike the default one, this frame stays visible while it is dragged
+    const VisibleFrame = (p: FrameProps) => {
+      const [, drag] = useDragTabs(p.tabs, p.onDrop)
+      return (
+        <div className="views-container">
+          <div className="rd-frame-header" ref={drag} />
+          {p.viewWrapper}
+        </div>
+      )
+    }
+    const dock = renderDock(
+      { type: 'box', id: 'B', orientation: 'horizontal', one: tabs('T1', ['a', 'b']), two: tabs('T2', ['x']) },
+      VisibleFrame
+    )
+
+    dragAndDrop(frameOf(dock.getByTestId, 'a').querySelector('.rd-frame-header')!, () =>
+      dropZoneOver(dock.getByTestId, 'a', 'over')
+    )
+
+    expect(repr(dock.layout())).toBe('h(a-b, x)')
   })
 })
 
