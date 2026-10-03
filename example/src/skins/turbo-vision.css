@@ -1,0 +1,177 @@
+@import '@fontsource/vt323/400.css';
+
+/* The 16 colors of text mode, and a grid of characters: 1ch wide, 1em high */
+.skin-turbo-vision {
+  --tv-blue: #0000aa;
+  --tv-cyan: #00aaaa;
+  --tv-green: #00aa00;
+  --tv-gray: #aaaaaa;
+  --tv-bright-green: #55ff55;
+  --tv-yellow: #ffff55;
+  /* ░ in blue on gray */
+  background: conic-gradient(var(--tv-blue) 0 25%, var(--tv-gray) 0) 0 0 / 3px 3px;
+  font:
+    20px/1 VT323,
+    monospace;
+  color: #fff;
+}
+
+.skin-turbo-vision .tv-window {
+  position: relative;
+  /* room for the shadow */
+  margin: 0 2ch 1em 0;
+  /* stretched by its pane, minus the margin */
+  height: auto;
+  background: var(--tv-blue);
+  box-shadow: 2ch 1em rgba(0, 0, 0, 0.6);
+  outline: none;
+}
+
+.skin-turbo-vision .tv-window.moving {
+  opacity: 0.5;
+}
+
+/* The frame, half a character from the edges */
+.skin-turbo-vision .tv-window::before {
+  content: '';
+  position: absolute;
+  inset: 0.5em 0.5ch;
+  border: 1px solid #fff;
+  pointer-events: none;
+}
+
+.skin-turbo-vision .tv-window:focus-within::before {
+  border: 4px double #fff;
+  inset: calc(0.5em - 2px) calc(0.5ch - 2px);
+}
+
+.skin-turbo-vision .tv-top,
+.skin-turbo-vision .tv-bottom {
+  position: relative;
+  display: flex;
+  flex: none;
+  height: 1em;
+}
+
+.skin-turbo-vision .tv-top {
+  justify-content: center;
+}
+
+.skin-turbo-vision .tv-bottom {
+  gap: 1ch;
+  padding: 0 2ch;
+}
+
+.skin-turbo-vision .tv-title {
+  padding: 0 1ch;
+  background: var(--tv-blue);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.skin-turbo-vision button {
+  padding: 0 1ch;
+  border: none;
+  background: var(--tv-blue);
+  color: #fff;
+  font: inherit;
+}
+
+.skin-turbo-vision .tv-close {
+  position: absolute;
+  left: 1ch;
+  visibility: hidden;
+}
+
+.skin-turbo-vision .tv-window:focus-within .tv-close {
+  visibility: visible;
+}
+
+.skin-turbo-vision .tv-close span {
+  color: var(--tv-bright-green);
+}
+
+.skin-turbo-vision .tv-tab.active {
+  background: var(--tv-cyan);
+  color: #000;
+}
+
+.skin-turbo-vision .view-wrapper {
+  margin: 0 1ch;
+}
+
+.skin-turbo-vision .Resizer.vertical,
+.skin-turbo-vision .Resizer.horizontal {
+  opacity: 1;
+  margin: 0;
+  border: none;
+  background: transparent;
+}
+
+.skin-turbo-vision .Resizer.vertical {
+  width: 1ch;
+}
+
+.skin-turbo-vision .Resizer.horizontal {
+  height: 0.5em;
+}
+
+.skin-turbo-vision .drop-zone {
+  opacity: 1;
+  border: 4px double var(--tv-yellow);
+  background: rgba(0, 0, 0, 0.4);
+}
+
+/* Views */
+
+.skin-turbo-vision .demo-view {
+  overflow: auto;
+  scrollbar-color: var(--tv-cyan) var(--tv-blue);
+}
+
+.skin-turbo-vision .demo-readme p {
+  margin-bottom: 1em;
+}
+
+.skin-turbo-vision code {
+  font: inherit;
+  color: var(--tv-yellow);
+}
+
+.skin-turbo-vision .demo-files {
+  list-style: none;
+  padding: 0;
+  background: var(--tv-cyan);
+  color: #000;
+}
+
+.skin-turbo-vision .demo-files li {
+  padding: 0 1ch;
+  cursor: default;
+}
+
+.skin-turbo-vision .demo-files li.selected {
+  background: var(--tv-green);
+  color: #fff;
+}
+
+.skin-turbo-vision .demo-notes {
+  border: none;
+  outline: none;
+  resize: none;
+  background: var(--tv-blue);
+  color: var(--tv-yellow);
+  font: inherit;
+}
+
+.skin-turbo-vision .demo-clock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.skin-turbo-vision .demo-clock .time {
+  font-size: 60px;
+  color: var(--tv-yellow);
+}

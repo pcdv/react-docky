@@ -1,0 +1,174 @@
+.skin-ide {
+  --ide-accent: #3d8bfd;
+  background: #111317;
+  color: #c9ced6;
+  font:
+    13px system-ui,
+    sans-serif;
+}
+
+.skin-ide .ide-frame {
+  background: #1b1e24;
+  outline: none;
+}
+
+.skin-ide .ide-frame.moving {
+  opacity: 0.4;
+}
+
+.skin-ide .ide-tabs {
+  display: flex;
+  flex: none;
+  background: #15181d;
+  cursor: grab;
+}
+
+.skin-ide .ide-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 8px 7px 12px;
+  /* 3px rather than 2, which looks thinner or thicker depending on its position at 125% or 150% */
+  border-top: 3px solid transparent;
+  color: #8a919c;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.skin-ide .ide-tab:hover {
+  color: #c9ced6;
+}
+
+.skin-ide .ide-tab.active {
+  border-top-color: #4a505a;
+  background: #1b1e24;
+  color: #c9ced6;
+}
+
+/* The active tab of the frame that has focus */
+.skin-ide .ide-frame:focus-within .ide-tab.active {
+  border-top-color: var(--ide-accent);
+  color: #fff;
+}
+
+.skin-ide .ide-close {
+  width: 18px;
+  height: 18px;
+  border: none;
+  border-radius: 4px;
+  background: none;
+  color: inherit;
+  font-size: 14px;
+  line-height: 1;
+  visibility: hidden;
+}
+
+.skin-ide .ide-tab:hover .ide-close,
+.skin-ide .ide-tab.active .ide-close {
+  visibility: visible;
+}
+
+.skin-ide .ide-close:hover {
+  background: #2c313a;
+}
+
+/* Thin splitters, highlighted when hovered */
+.skin-ide .Resizer.vertical,
+.skin-ide .Resizer.horizontal {
+  opacity: 1;
+  background: #111317;
+  border-color: transparent;
+  transition: background 0.2s;
+}
+
+.skin-ide .Resizer.vertical {
+  width: 3px;
+  margin: 0;
+  border: none;
+}
+
+.skin-ide .Resizer.horizontal {
+  height: 3px;
+  margin: 0;
+  border: none;
+}
+
+.skin-ide .Resizer:hover,
+.skin-ide .Resizer[data-dragging] {
+  background: var(--ide-accent);
+}
+
+.skin-ide .drop-zone {
+  border: 2px solid var(--ide-accent);
+  background: color-mix(in srgb, var(--ide-accent) 25%, transparent);
+  opacity: 1;
+}
+
+/* Views */
+
+.skin-ide .demo-view {
+  padding: 12px 16px;
+  overflow: auto;
+}
+
+.skin-ide .demo-readme p {
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+.skin-ide code,
+.skin-ide .demo-notes,
+.skin-ide .demo-files {
+  font-family: 'Cascadia Code', Consolas, 'SF Mono', monospace;
+  font-size: 12px;
+}
+
+.skin-ide code {
+  color: #e5c07b;
+}
+
+.skin-ide .demo-files {
+  list-style: none;
+  padding: 6px 0;
+}
+
+.skin-ide .demo-files li {
+  padding: 3px 16px;
+  cursor: pointer;
+}
+
+.skin-ide .demo-files li:hover {
+  background: #232831;
+}
+
+.skin-ide .demo-files li.selected {
+  background: #26344d;
+  color: #fff;
+}
+
+.skin-ide .demo-notes {
+  border: none;
+  outline: none;
+  resize: none;
+  background: #1b1e24;
+  color: #c9ced6;
+  line-height: 1.6;
+}
+
+.skin-ide .demo-clock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.skin-ide .demo-clock .time {
+  font-size: 40px;
+  font-weight: 200;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+}
+
+.skin-ide .demo-clock .date {
+  color: #8a919c;
+}

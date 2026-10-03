@@ -8,6 +8,7 @@ Allows rearranging the layout by dragging and resizing views.
 [Sandbox](https://codesandbox.io/s/react-docky-forked-s5hib)
 
 Examples:
+ * [Skins](https://github.com/pcdv/react-docky/blob/main/example/src/Skins.tsx): the same layout as a dark IDE, Windows 95, a 1-bit Macintosh or Turbo Vision
  * [Uncontrolled](https://github.com/pcdv/react-docky/blob/main/example/src/App.tsx)
  * [Controlled, with undo](https://github.com/pcdv/react-docky/blob/main/example/src/App2.tsx)
  * [Custom look and feel](https://github.com/pcdv/react-docky/blob/main/example/src/Custom.tsx)

@@ -1,0 +1,182 @@
+@import '@fontsource/pixelify-sans/400.css';
+@import '@fontsource/pixelify-sans/700.css';
+
+/* 1-bit: black, white, and a 50% dither for the desktop */
+.skin-mac {
+  background: repeating-conic-gradient(#000 0 25%, #fff 0 50%) 0 0 / 2px 2px;
+  color: #000;
+  font:
+    14px 'Pixelify Sans',
+    sans-serif;
+}
+
+.skin-mac .mac-window {
+  margin: 0 1px 1px 0;
+  /* stretched by its pane, minus the margin */
+  height: auto;
+  border: 1px solid #000;
+  background: #fff;
+  box-shadow: 1px 1px #000;
+  outline: none;
+}
+
+.skin-mac .mac-title {
+  position: relative;
+  display: flex;
+  flex: none;
+  justify-content: center;
+  align-items: center;
+  height: 20px;
+  border-bottom: 1px solid #000;
+  font-weight: bold;
+}
+
+/* Stripes, which the close box and the title cover */
+.skin-mac .mac-window:focus-within .mac-title {
+  background: repeating-linear-gradient(#000 0 1px, #fff 1px 2px) 0 4px / 100% 11px no-repeat;
+  background-clip: content-box;
+  padding: 0 2px;
+}
+
+.skin-mac .mac-title-text {
+  padding: 0 6px;
+  background: #fff;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.skin-mac .mac-close {
+  position: absolute;
+  left: 8px;
+  width: 13px;
+  height: 11px;
+  padding: 0;
+  border: 1px solid #000;
+  background: #fff;
+  /* white margin around the box */
+  box-shadow: 0 0 0 1px #fff;
+  visibility: hidden;
+}
+
+.skin-mac .mac-window:focus-within .mac-close {
+  visibility: visible;
+}
+
+.skin-mac .mac-close:active {
+  background: #000;
+}
+
+/* An empty placeholder is left where a window is being moved from */
+.skin-mac .mac-window.moving {
+  border-style: dashed;
+  box-shadow: none;
+}
+
+.skin-mac .mac-window.moving > *,
+.skin-mac .mac-window.moving .mac-close {
+  visibility: hidden;
+}
+
+.skin-mac .mac-tabs {
+  display: flex;
+  flex: none;
+  gap: 4px;
+  padding: 3px 4px;
+  border-top: 1px solid #000;
+}
+
+.skin-mac button {
+  font: inherit;
+  color: inherit;
+}
+
+.skin-mac .mac-tab {
+  padding: 0 8px;
+  border: 1px solid #000;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.skin-mac .mac-tab.active {
+  background: #000;
+  color: #fff;
+}
+
+.skin-mac .Resizer.vertical,
+.skin-mac .Resizer.horizontal {
+  opacity: 1;
+  margin: 0;
+  border: none;
+  background: transparent;
+}
+
+.skin-mac .Resizer.vertical {
+  width: 6px;
+}
+
+.skin-mac .Resizer.horizontal {
+  height: 6px;
+}
+
+/* Marching ants, without the march */
+.skin-mac .drop-zone {
+  opacity: 1;
+  border: 2px dashed #000;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Views */
+
+.skin-mac .demo-view {
+  overflow: auto;
+}
+
+.skin-mac .demo-readme {
+  padding: 8px 12px;
+}
+
+.skin-mac .demo-readme p {
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.skin-mac code {
+  font: inherit;
+  text-decoration: underline;
+}
+
+.skin-mac .demo-files {
+  list-style: none;
+  padding: 4px 0;
+}
+
+.skin-mac .demo-files li {
+  padding: 0 10px;
+  cursor: default;
+}
+
+.skin-mac .demo-files li.selected {
+  background: #000;
+  color: #fff;
+}
+
+.skin-mac .demo-notes {
+  padding: 6px 10px;
+  border: none;
+  outline: none;
+  resize: none;
+  font: inherit;
+  color: #000;
+}
+
+.skin-mac .demo-clock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.skin-mac .demo-clock .time {
+  font-size: 36px;
+}

@@ -88,3 +88,20 @@ body {
 .views-container.dragging {
   opacity: 0.4;
 }
+
+/* Skins */
+
+#actions.skins {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+}
+
+#actions.skins a {
+  color: #444;
+}
+
+#actions.skins a.active {
+  font-weight: bold;
+  text-decoration: none;
+}

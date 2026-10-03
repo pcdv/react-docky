@@ -1,4 +1,4 @@
-import { StrictMode, useEffect, useState } from 'react'
+import { ComponentType, StrictMode, useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import 'react-docky/assets/index.css'
 import 'react-docky/assets/react-splitpane.css'
@@ -7,8 +7,10 @@ import App from './App'
 import App2 from './App2'
 import './App.css'
 import Custom from './Custom'
+import Skins from './Skins'
 
 const EXAMPLES = {
+  skins: { title: 'Skins', component: Skins },
   uncontrolled: { title: 'Uncontrolled', component: App },
   controlled: { title: 'Controlled, with undo', component: App2 },
   custom: { title: 'Custom look and feel', component: Custom },
@@ -16,21 +18,22 @@ const EXAMPLES = {
 
 type Name = keyof typeof EXAMPLES
 
-const current = (): Name => {
-  const name = location.hash.slice(1)
-  return name in EXAMPLES ? (name as Name) : 'uncontrolled'
+/** "#skins/win95" shows the "skins" example, with "win95" as its argument */
+const current = (): { name: Name; arg?: string } => {
+  const [name, arg] = location.hash.slice(1).split('/')
+  return name in EXAMPLES ? { name: name as Name, arg } : { name: 'skins' }
 }
 
 function Examples() {
-  const [name, setName] = useState(current)
+  const [{ name, arg }, setRoute] = useState(current)
 
   useEffect(() => {
-    const onHashChange = () => setName(current())
+    const onHashChange = () => setRoute(current())
     window.addEventListener('hashchange', onHashChange)
     return () => window.removeEventListener('hashchange', onHashChange)
   }, [])
 
-  const Example = EXAMPLES[name].component
+  const Example: ComponentType<{ arg?: string }> = EXAMPLES[name].component
   return (
     <>
       <nav id="examples">
@@ -41,7 +44,7 @@ function Examples() {
         ))}
       </nav>
       <main id="example">
-        <Example key={name} />
+        <Example key={name} arg={arg} />
       </main>
     </>
   )

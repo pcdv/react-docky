@@ -1,0 +1,227 @@
+.skin-win95 {
+  --w95-raised:
+    inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px #808080, inset 2px 2px #dfdfdf;
+  --w95-window:
+    inset -1px -1px #0a0a0a, inset 1px 1px #dfdfdf, inset -2px -2px #808080, inset 2px 2px #fff;
+  background: #008080;
+  font:
+    11px 'MS Sans Serif',
+    'Microsoft Sans Serif',
+    Tahoma,
+    sans-serif;
+  color: #000;
+}
+
+.skin-win95 .w95-window {
+  gap: 2px;
+  padding: 3px;
+  background: #c0c0c0;
+  box-shadow: var(--w95-window);
+  outline: none;
+}
+
+.skin-win95 .w95-window.moving {
+  opacity: 0.5;
+}
+
+.skin-win95 .w95-title {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 3px;
+  height: 18px;
+  padding: 0 2px 0 3px;
+  background: #808080;
+  color: #c0c0c0;
+  font-weight: bold;
+}
+
+.skin-win95 .w95-window:focus-within .w95-title {
+  background: #000080;
+  color: #fff;
+}
+
+/* A tiny window, drawn with gradients */
+.skin-win95 .w95-icon {
+  flex: none;
+  width: 14px;
+  height: 12px;
+  border: 1px solid #000;
+  background: linear-gradient(#000080 0 3px, #fff 3px);
+}
+
+.skin-win95 .w95-title-text {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.skin-win95 button {
+  font: inherit;
+  color: #000;
+  background: #c0c0c0;
+  border: none;
+  box-shadow: var(--w95-raised);
+}
+
+.skin-win95 .w95-button {
+  width: 16px;
+  height: 14px;
+  padding: 0;
+  font:
+    bold 13px/12px Arial,
+    sans-serif;
+}
+
+.skin-win95 .w95-button:active {
+  box-shadow:
+    inset 1px 1px #0a0a0a,
+    inset -1px -1px #fff,
+    inset 2px 2px #808080,
+    inset -2px -2px #dfdfdf;
+}
+
+/* Property sheet tabs */
+.skin-win95 .w95-tabs {
+  display: flex;
+  flex: none;
+  padding: 2px 2px 0;
+  margin-bottom: -2px;
+}
+
+.skin-win95 .w95-tab {
+  position: relative;
+  top: 2px;
+  padding: 2px 8px 3px;
+  border-radius: 3px 3px 0 0;
+  box-shadow:
+    inset 1px 1px #fff,
+    inset -1px 0 #0a0a0a,
+    inset -2px 0 #808080;
+}
+
+.skin-win95 .w95-tab.active {
+  z-index: 1;
+  top: 0;
+  margin: 0 -2px;
+  padding: 3px 10px 5px;
+}
+
+/* Sunken field around the view */
+.skin-win95 .view-wrapper {
+  border: 1px solid;
+  border-color: #808080 #fff #fff #808080;
+  background: #fff;
+}
+
+.skin-win95 .w95-status {
+  display: flex;
+  flex: none;
+  gap: 2px;
+}
+
+.skin-win95 .w95-status > span {
+  flex: 1;
+  padding: 2px 4px;
+  box-shadow:
+    inset 1px 1px #808080,
+    inset -1px -1px #fff;
+}
+
+/* The desktop shows between windows */
+.skin-win95 .Resizer.vertical,
+.skin-win95 .Resizer.horizontal {
+  opacity: 1;
+  margin: 0;
+  border: none;
+  background: transparent;
+}
+
+.skin-win95 .Resizer.vertical {
+  width: 4px;
+}
+
+.skin-win95 .Resizer.horizontal {
+  height: 4px;
+}
+
+/* The dotted outline that windows had while being moved */
+.skin-win95 .drop-zone {
+  opacity: 1;
+  border: none;
+  padding: 4px;
+  background: repeating-conic-gradient(#000 0 25%, #fff 0 50%) 0 0 / 2px 2px;
+  mask-image: linear-gradient(#000 0 0), linear-gradient(#000 0 0);
+  mask-clip: content-box, border-box;
+  mask-composite: exclude;
+}
+
+/* Views */
+
+.skin-win95 .demo-view {
+  overflow: auto;
+  box-shadow:
+    inset 1px 1px #0a0a0a,
+    inset -1px -1px #dfdfdf;
+}
+
+.skin-win95 .demo-readme {
+  padding: 8px 10px;
+}
+
+.skin-win95 .demo-readme p {
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.skin-win95 .demo-files {
+  list-style: none;
+  padding: 3px;
+}
+
+.skin-win95 .demo-files li {
+  padding: 1px 3px 1px 21px;
+  /* A blank document icon */
+  background:
+    linear-gradient(#fff 0 0) 5px 50% / 9px 11px no-repeat,
+    linear-gradient(#000 0 0) 4px 50% / 11px 13px no-repeat;
+  cursor: default;
+}
+
+.skin-win95 .demo-files li.selected {
+  background-color: #000080;
+  color: #fff;
+}
+
+.skin-win95 .demo-notes {
+  padding: 4px;
+  border: none;
+  outline: none;
+  resize: none;
+  font:
+    13px 'Fixedsys',
+    'Courier New',
+    monospace;
+}
+
+.skin-win95 .demo-clock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: #c0c0c0;
+}
+
+.skin-win95 .demo-clock .time {
+  padding: 4px 10px;
+  background: #000;
+  color: #0f0;
+  font:
+    28px 'Courier New',
+    monospace;
+  box-shadow:
+    inset 1px 1px #808080,
+    inset -1px -1px #fff;
+}
