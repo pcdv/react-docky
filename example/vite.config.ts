@@ -5,6 +5,8 @@ import { defineConfig } from 'vite'
 // The examples import react-docky as an application would, but get its sources: there is no need
 // to build the library, and changes are reloaded right away.
 export default defineConfig({
+  // Relative URLs, so that the build works from any path, such as GitHub Pages' /react-docky/
+  base: './',
   plugins: [react()],
   resolve: {
     alias: [

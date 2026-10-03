@@ -4,8 +4,7 @@
 
 Allows rearranging the layout by dragging and resizing views.
 
-[Demo](https://s5hib.csb.app/)
-[Sandbox](https://codesandbox.io/s/react-docky-forked-s5hib)
+[Demo](https://pcdv.github.io/react-docky/)
 
 Examples:
  * [Skins](https://github.com/pcdv/react-docky/blob/main/example/src/Skins.tsx): the same layout as a dark IDE, Windows 95, a 1-bit Macintosh or Turbo Vision
@@ -68,6 +67,9 @@ To try changes in the [example app](example), which uses the sources of the libr
 ```sh
 npm run dev
 ```
+
+The [demo](https://pcdv.github.io/react-docky/) is built from `main` and deployed to GitHub Pages by
+[a workflow](.github/workflows/pages.yml).
 
 ## Alternatives
 
