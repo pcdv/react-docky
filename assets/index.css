@@ -178,6 +178,27 @@
   user-select: none;
 }
 
+/* A finger is much wider than a resizer: widen the area that grabs it, without changing its look */
+@media (pointer: coarse) {
+  .rd-split > .Resizer {
+    position: relative;
+    z-index: 2;
+  }
+
+  .rd-split > .Resizer::before {
+    content: '';
+    position: absolute;
+  }
+
+  .rd-split > .Resizer.vertical::before {
+    inset: 0 -12px;
+  }
+
+  .rd-split > .Resizer.horizontal::before {
+    inset: -12px 0;
+  }
+}
+
 /* With keepViewsMounted, the element of the view is moved into the slot where it is displayed */
 .rd-view-slot {
   display: flex;
