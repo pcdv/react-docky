@@ -1,10 +1,10 @@
-import { fireEvent, getByRole, render } from '@testing-library/react'
+import { act, fireEvent, getByRole, render } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { Dock } from './Dock.js'
 import { FrameProps, useDragTabs } from './skin/index.js'
 import { IBox } from './types.js'
 import { repr } from './util.js'
-import { dragAndDrop, dropZoneOver, frameOf, renderDock, tabs } from './test-utils.js'
+import { dragAndDrop, dropZoneOver, frameOf, renderDock, tabs, touchDragAndDrop } from './test-utils.js'
 
 describe('Dragging views', () => {
   it('drops on a view according to the current orientation of its box', () => {
@@ -44,6 +44,45 @@ describe('Dragging views', () => {
     )
 
     expect(repr(dock.layout())).toBe('h(x-c-a-b, null)')
+  })
+
+  it('drags a view with a finger held on its tab', () => {
+    vi.useFakeTimers()
+    try {
+      const dock = renderDock({
+        type: 'box',
+        id: 'B',
+        orientation: 'horizontal',
+        one: tabs('T1', ['a', 'b']),
+        two: tabs('T2', ['x']),
+      })
+
+      touchDragAndDrop(getByRole(frameOf(dock.getByTestId, 'a') as HTMLElement, 'button', { name: 'b' }), () =>
+        dropZoneOver(dock.getByTestId, 'x', 'over')
+      )
+
+      expect(repr(dock.layout())).toBe('h(a, x-b)')
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('does not drag a tab that is only tapped', () => {
+    vi.useFakeTimers()
+    try {
+      const dock = renderDock({ type: 'box', id: 'B', orientation: 'horizontal', one: tabs('T1', ['a', 'b']), two: tabs('T2', ['x']) })
+      const tab = getByRole(frameOf(dock.getByTestId, 'a') as HTMLElement, 'button', { name: 'b' })
+
+      fireEvent.touchStart(tab, { touches: [{ clientX: 0, clientY: 0 }] })
+      act(() => vi.advanceTimersByTime(100))
+      expect(dock.container.querySelector('.dz-trigger')).toBeNull()
+      fireEvent.touchEnd(tab, { touches: [], changedTouches: [{ clientX: 0, clientY: 0 }] })
+      act(() => vi.advanceTimersByTime(500))
+
+      expect(dock.container.querySelector('.dz-trigger')).toBeNull()
+    } finally {
+      vi.useRealTimers()
+    }
   })
 
   it('does not drop a tab group on itself', () => {

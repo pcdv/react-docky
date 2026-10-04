@@ -172,3 +172,9 @@
 .skin-ide .demo-clock .date {
   color: #8a919c;
 }
+
+.skin-ide .rd-drag-preview {
+  border: 1px solid var(--ide-accent);
+  background: #1b1e24;
+  color: #c9ced6;
+}

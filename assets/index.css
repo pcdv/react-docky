@@ -95,6 +95,18 @@
   bottom: 0;
 }
 
+/* Label of the dragged views, next to the pointer */
+.rd-drag-preview {
+  padding: 2px 8px;
+  border: 1px solid #888;
+  border-radius: 3px;
+  background: #fff;
+  color: #222;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
 .box.horizontal {
   flex-direction: row;
 }

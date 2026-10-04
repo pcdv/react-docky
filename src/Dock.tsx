@@ -1,7 +1,6 @@
 import React, { createContext, useEffect, useRef, useReducer, useState, MutableRefObject } from 'react'
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
 import { Box } from './Box.js'
+import { DragAndDrop } from './drag.js'
 import { MountedViews, ViewElements } from './MountedViews.js'
 import { DockAction, reducer } from './reducer.js'
 import { FrameProps } from './skin/index.js'
@@ -74,11 +73,7 @@ export const Dock = ({
     )
   else throw Error('Must supply either state + onChange or initialState')
 
-  return (
-    <DndProvider backend={HTML5Backend}>
-      {child}
-    </DndProvider>
-  )
+  return <DragAndDrop>{child}</DragAndDrop>
 }
 
 interface UProps {

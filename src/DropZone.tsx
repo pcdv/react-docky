@@ -1,6 +1,6 @@
+import { useDndContext, useDroppable } from '@dnd-kit/core'
 import { FC } from 'react'
-import { useDrop } from 'react-dnd'
-import { useDndRef } from './dndRef.js'
+import { DragData, DropData } from './drag.js'
 import { BoxAction, BoxTransformType } from './reducer.js'
 import { Direction, IBox, ITabs, IView } from './types.js'
 
@@ -23,33 +23,19 @@ interface DZProps {
 }
 
 export const DropZone: FC<DZProps> = ({ box, position, action, accept }) => {
+  const item = (useDndContext().active?.data.current as DragData | undefined)?.item
+  const canDrop = !!item && (accept ? accept(item, action) : true)
   // The action depends on the orientation of the box, which can change while this zone stays
-  // mounted: without dependencies, react-dnd would keep the spec of the first render.
-  const boxId = box.id
-  const [{ canDrop, isOver, isVisible }, drop] = useDrop(
-    () => ({
-      accept: ['VIEW', 'TABS'],
-      canDrop: (item /*, monitor*/) => {
-        return accept ? accept(item as IView | ITabs, action) : true
-      },
-      drop: item => dropAction(boxId, item as IView, action),
-      collect: monitor => ({
-        isOver: monitor.isOver(),
-        canDrop: monitor.canDrop(),
-        isVisible: !!monitor.getItem(),
-      }),
-    }),
-    [boxId, action, accept]
-  )
-  const dropRef = useDndRef<HTMLDivElement>(drop)
-
-  const isActive = canDrop && isOver
-  if (!isVisible) return null
+  // mounted: dnd-kit always reads the latest data
   const key = `${box.id}-${action}`
+  const data: DropData = { drop: dragged => dropAction(box.id, dragged as IView, action) }
+  const { setNodeRef, isOver } = useDroppable({ id: key, disabled: !canDrop, data })
+
+  if (!item) return null
   return (
     <>
-      <div ref={dropRef} key={key} className={`dz-trigger ${position} `} title={key} />
-      {isActive && <div className={`drop-zone ${position}`} />}
+      <div ref={setNodeRef} key={key} className={`dz-trigger ${position} `} title={key} />
+      {canDrop && isOver && <div className={`drop-zone ${position}`} />}
     </>
   )
 }

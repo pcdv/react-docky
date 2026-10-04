@@ -1,5 +1,6 @@
 import { act, fireEvent, render } from '@testing-library/react'
 import { useState } from 'react'
+import { vi } from 'vitest'
 import { Dock, DockProps } from './Dock.js'
 import { IBox, ITabs, IView } from './types.js'
 
@@ -43,26 +44,53 @@ export function renderDock(initial: IBox, props: Partial<DockProps> = {}) {
   }
 }
 
-const dataTransfer = {
-  dropEffect: 'move',
-  effectAllowed: 'all',
-  types: [],
-  setData: () => {},
-  getData: () => '',
-  setDragImage: () => {},
+/** Where the drop target is laid out: jsdom lays out nothing, every other element is at 0, 0 */
+const TARGET = { left: 100, top: 100, width: 10, height: 10 }
+const IN_TARGET = { clientX: 105, clientY: 105 }
+
+/**
+ * Gives the element returned by `target` the bounds TARGET when dnd-kit measures drop zones.
+ * It is looked up then, as drop zones are only rendered once a drag has started.
+ */
+function layOutTarget(target: () => Element) {
+  const original = Element.prototype.getBoundingClientRect
+  vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (this: Element) {
+    let isTarget = false
+    try {
+      isTarget = this === target()
+    } catch {
+      // Not rendered yet
+    }
+    if (!isTarget) return original.call(this)
+    const { left, top, width, height } = TARGET
+    return { left, top, width, height, x: left, y: top, right: left + width, bottom: top + height } as DOMRect
+  })
 }
 
 /**
- * Drags `source` and drops it on the element returned by `target`, which is only looked up once
- * the drag has started: drop zones are not rendered before.
+ * Drags `source` with the mouse and drops it on the element returned by `target`, which is only
+ * looked up once the drag has started: drop zones are not rendered before.
  */
 export function dragAndDrop(source: Element, target: () => Element) {
-  fireEvent.dragStart(source, { dataTransfer })
-  const dropTarget = target()
-  fireEvent.dragEnter(dropTarget, { dataTransfer })
-  fireEvent.dragOver(dropTarget, { dataTransfer })
-  fireEvent.drop(dropTarget, { dataTransfer })
-  fireEvent.dragEnd(source, { dataTransfer })
+  layOutTarget(target)
+  fireEvent.mouseDown(source, { button: 0, clientX: 0, clientY: 0 })
+  fireEvent.mouseMove(document, IN_TARGET)
+  fireEvent.mouseMove(document, IN_TARGET)
+  fireEvent.mouseUp(document, IN_TARGET)
+}
+
+/**
+ * Drags `source` with a finger, which takes holding it still first, and drops it on the element
+ * returned by `target`. Needs fake timers.
+ */
+export function touchDragAndDrop(source: Element, target: () => Element) {
+  layOutTarget(target)
+  const at = (point: { clientX: number; clientY: number }) => ({ touches: [point], changedTouches: [point] })
+  fireEvent.touchStart(source, at({ clientX: 0, clientY: 0 }))
+  act(() => vi.advanceTimersByTime(300))
+  fireEvent.touchMove(source, at(IN_TARGET))
+  fireEvent.touchMove(source, at(IN_TARGET))
+  fireEvent.touchEnd(source, { touches: [], changedTouches: [IN_TARGET] })
 }
 
 /** The frame (default skin, or with the same class) that contains the active view `viewId` */

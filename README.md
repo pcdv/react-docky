@@ -28,8 +28,9 @@ Examples:
 
 ## Dependencies
  * react 18 or 19
- * react-dnd 16 and react-dnd-html5-backend: the Dock provides a DndProvider with the HTML5
-   backend, unless the application already has one
+ * @dnd-kit/core, installed with react-docky: views are dragged with a mouse, or with a finger
+   held for a moment on a tab or title, so that a tap still activates a tab and a swipe still
+   scrolls. Each Dock has its own drag-and-drop context.
 
 ## Todo
  * More tests and examples
@@ -41,7 +42,7 @@ Maybe later
 ## How to install
 
 ```
-npm install react-docky react-dnd react-dnd-html5-backend
+npm install react-docky
 ```
 
 And import the styles:

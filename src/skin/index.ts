@@ -1,7 +1,6 @@
 import { ReactElement, RefCallback, useContext } from 'react'
-import { useDrag } from 'react-dnd'
 import { DockContext } from '../Dock.js'
-import { useDndRef } from '../dndRef.js'
+import { useDragSource } from '../drag.js'
 import { BoxAction } from '../reducer.js'
 import { ITabs, IView } from '../types.js'
 
@@ -53,21 +52,8 @@ export interface TabProps {
  */
 export function useDragTab<T extends HTMLElement = HTMLElement>(view: IView): RefCallback<T> {
   const { dispatch, state } = useContext(DockContext)
-  const [, drag] = useDrag(
-    () => ({
-      type: 'VIEW',
-      item: () => view,
-      collect: monitor => ({ isDragging: monitor.isDragging() }),
-      end: (_item, monitor) => {
-        if (monitor.didDrop()) {
-          dispatch(monitor.getDropResult() as BoxAction, state.current)
-        }
-      },
-    }),
-    [view, dispatch, state]
-  )
-
-  return useDndRef<T>(drag)
+  const [, drag] = useDragSource<T>({ item: view, onDrop: action => dispatch(action, state.current) })
+  return drag
 }
 
 /** @deprecated Renamed to useDragTab, as it is a hook */
@@ -82,19 +68,6 @@ export function useDragTabs<T extends HTMLElement = HTMLElement>(
   tabs: ITabs,
   onDrop: (action: BoxAction) => void
 ) {
-  const [collected, drag, preview] = useDrag(
-    () => ({
-      type: 'TABS',
-      item: () => tabs,
-      collect: monitor => ({ isTabsDragging: monitor.isDragging() }),
-      end: (_item, monitor) => {
-        if (monitor.didDrop()) {
-          onDrop(monitor.getDropResult() as BoxAction)
-        }
-      },
-    }),
-    [tabs, onDrop]
-  )
-
-  return [collected, useDndRef<T>(drag), preview] as const
+  const [isTabsDragging, drag] = useDragSource<T>({ item: tabs, onDrop })
+  return [{ isTabsDragging }, drag] as const
 }
