@@ -1,7 +1,7 @@
 import { ComponentType, StrictMode, useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import 'react-docky/assets/index.css'
-import 'react-docky/assets/react-splitpane.css'
+import 'react-docky/assets/splitter.css'
 import 'react-docky/assets/skin.css'
 import App from './App'
 import App2 from './App2'

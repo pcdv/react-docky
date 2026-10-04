@@ -1,0 +1,41 @@
+.Resizer {
+  border: 5px solid rgba(0, 0, 0, 0);
+  background: #000;
+  opacity: 0.2;
+  z-index: 1;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding;
+  background-clip: padding-box;
+}
+
+.Resizer:hover, .Resizer[data-dragging] {
+  border-color: rgba(0, 0, 0, 0.5);
+  -webkit-transition: border-color 2s ease;
+  transition: border-color 2s ease;
+}
+
+.Resizer.horizontal {
+  height: 11px;
+  margin: -5px 0;
+  cursor: row-resize;
+  width: 100%;
+  border-left: none;
+  border-right: none;
+}
+
+.Resizer.vertical {
+  width: 11px;
+  margin: 0px -5px;
+  cursor: col-resize;
+  border-top: none;
+  border-bottom: none;
+}
+.Resizer.disabled {
+  cursor: not-allowed;
+}
+.Resizer.disabled:hover {
+  border-color: transparent;
+}

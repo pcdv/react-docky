@@ -49,7 +49,7 @@ And import the styles:
 ```ts
 import 'react-docky/assets/index.css' // layout and drop zones
 import 'react-docky/assets/skin.css' // default look and feel
-import 'react-docky/assets/react-splitpane.css' // resizers
+import 'react-docky/assets/splitter.css' // resizers
 ```
 
 ## How to build / test
